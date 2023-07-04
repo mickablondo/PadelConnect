@@ -16,6 +16,7 @@ PadelConnect est une application décentralisée de gestion de tournois de Padel
 - [ ] Site web déployé : 
 - [ ] url 2 contracts
 - [ ] Board of issues
+- [ ] Lien ipfs ou autre pour le NFT !?
 
 ### Stack technique
 
