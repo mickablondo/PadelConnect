@@ -19,7 +19,7 @@ PadelConnect est une application décentralisée de gestion de tournois de Padel
 
 ### Stack technique
 
-- [ ] Lister sous forme de badges les technos utilisées
+- [ ] Lister sous forme de badges les technos utilisées : React / Nextjs / Wagmi / Viem /Solidity / Git / Chakra-ui / Rainbow Kit / EtherJs (?) / Hardhat (?) / chai (?) / TU (?)
 
 ## Schéma d'architecture technique
 Le schéma ci-dessous montrent les interactions entre le frontend et les smart contracts :  
