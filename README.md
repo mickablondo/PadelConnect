@@ -17,8 +17,12 @@ PadelConnect est une application décentralisée de gestion de tournois de Padel
 - [ ] url 2 contracts
 - [ ] Board of issues
 
-## Schéma d'architecture technique
+### Stack technique
 
+- [ ] Lister sous forme de badges les technos utilisées
+
+## Schéma d'architecture technique
+Le schéma ci-dessous montrent les interactions entre le frontend et les smart contracts :  
 ```mermaid
 flowchart >
     A[ /home] -->|If owner| B[ /admin]
@@ -40,6 +44,16 @@ flowchart >
 
 ## Description des fonctionnalités
 
-Résumé des éléments fonctionnels du projet.
+- [ ] Résumé des éléments fonctionnels du projet.
 
 ## Instructions d'installation
+
+- [ ] Liste des commandes pour lancer le projet : Backend
+- [ ] Liste des commandes pour lancer le projet : Frontend
+- [ ] Commande pour lancer les TU + rapport à ajouter
+- [ ] Scripts de migration
+- [ ] Scripts personnels : ajout d'un manager et d'un tournoi / ajout de messages ...
+
+### Backend
+### Frontend
+### Tests unitaires
