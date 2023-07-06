@@ -40,7 +40,9 @@ flowchart >
     E -.->|transfer to manager| I
     F -.->|get history & add comment| I
     G -.->|get history & add comment| I
-    H -.->|mint| J((Smart Contract - NFT))
+    H -.->|mint| I
+    I -.->|add winner| J((Smart Contract - NFT))
+    I -.->|mint| J
 ```
 ![image](https://github.com/mickablondo/PadelConnect/assets/36310658/2214d57d-b78b-4f01-93a0-ccec16eb74e1)
 
