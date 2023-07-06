@@ -37,7 +37,7 @@ flowchart >
     B -.->|administrate managers| I
     C -.->|manage tournaments| I
     D -.->|get infos| I
-    E -.->|transfer to manager| I
+    E -.->|add player -> tournament<br/>transfer to manager| I
     F -.->|get history & add comment| I
     G -.->|get history & add comment| I
     H -.->|mint| I
