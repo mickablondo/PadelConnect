@@ -1,7 +1,38 @@
+"use client"
 import './globals.css'
-import { Inter } from 'next/font/google'
+import { ChakraProvider } from '@chakra-ui/react'
 
-const inter = Inter({ subsets: ['latin'] })
+import '@rainbow-me/rainbowkit/styles.css';
+
+import {
+  getDefaultWallets,
+  RainbowKitProvider,
+} from '@rainbow-me/rainbowkit';
+import { configureChains, createConfig, WagmiConfig } from 'wagmi';
+import {
+  hardhat
+} from 'wagmi/chains';
+import { publicProvider } from 'wagmi/providers/public';
+
+const { chains, publicClient } = configureChains(
+  [hardhat],
+  [
+    //alchemyProvider({ apiKey: process.env.ALCHEMY_ID }),
+    publicProvider()
+  ]
+);
+
+const { connectors } = getDefaultWallets({
+  appName: 'My RainbowKit App',
+  projectId: process.env.NEXT_WALLET_CONNECT_PROJECTID,
+  chains
+});
+
+const wagmiConfig = createConfig({
+  autoConnect: false,
+  connectors,
+  publicClient
+})
 
 export const metadata = {
   title: 'Create Next App',
@@ -11,7 +42,15 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body>
+        <WagmiConfig config={wagmiConfig}>
+          <RainbowKitProvider chains={chains}>
+            <ChakraProvider>
+              {children}
+            </ChakraProvider>
+          </RainbowKitProvider>
+        </WagmiConfig>
+      </body>
     </html>
   )
 }
