@@ -32,8 +32,7 @@ flowchart >
     D -->|Any user| E[ /inscription]
     D -->|Any user| F[ /forum]
     D -->|Any user| G[ /pm]
-    A -.->|get tournaments| I((Smart Contract - Forum))
-    B -.->|administrate managers| I
+    B -.->|administrate managers| I((Smart Contract - Forum))
     C -.->|manage tournaments| I
     D -.->|get infos| I
     E -.->|add player -> tournament<br/>transfer to manager| I
@@ -42,6 +41,7 @@ flowchart >
     G -.->|get history & add comment| I
     I -.->|add winner| J((Smart Contract - NFT))
     I -.->|mint| J
+    I -.->|events tournaments/comments| A
 ```
 ![image](https://github.com/mickablondo/PadelConnect/assets/36310658/2214d57d-b78b-4f01-93a0-ccec16eb74e1)
 
