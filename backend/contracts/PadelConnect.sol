@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.20;
 
-import "../node_modules/@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 import "./IPadelConnect.sol";
 
 /// @title Padel tournament management contract
@@ -15,8 +15,11 @@ contract PadelConnect is IPadelConnect, Ownable {
     /// @notice Map of a manager address to his description
     mapping(address => Manager) private managers;
 
-    /// @notice Map of a manager address to a Tournament
-    mapping(address => Tournament) tournamentsByManager;
+    /// @notice Map of a tournament id to a manager
+    mapping(uint => Manager) linkManagerTournament;
+
+    /// @notice Array of the tournaments
+    Tournament[] tournaments;
 
     /// @notice Map of a player address to his description
     mapping(address => Player) private players;
@@ -43,35 +46,35 @@ contract PadelConnect is IPadelConnect, Ownable {
     /**
      * @dev See {IPadelConnect-addManager}.
      */
-    function addManager(address _address, bytes32 firstName, bytes32 lastName) external {}
+    function addManager(address _address, bytes32 firstName, bytes32 lastName) onlyOwner external {}
 
     /**
      * @dev See {IPadelConnect-addTournament}.
      */
-    function addTournament() external {}
+    function addTournament(bytes32 _city, uint _price, uint _date, uint8 _maxPlayers) onlyManagers() external {}
 
     /**
      * @dev See {IPadelConnect-getTournament}.
      */
-    function getTournament() external view returns(Tournament memory) {}
+    function getTournament(uint _id) external view returns(Tournament memory) {}
 
     /**
      * @dev See {IPadelConnect-registerPlayer}.
      */
-    function registerPlayer() external {}
+    function registerPlayer(uint _id, bytes32 _firstName, bytes32 _lastName) payable external {}
 
     /**
      * @dev See {IPadelConnect-addWinners}.
      */
-    function addWinners() external {}
+    function addWinners(uint _id, address _winner1, address _winner2) onlyOwner external {}
 
     /**
      * @dev See {IPadelConnect-addComment}.
      */
-    function addComment() external {}
+    function addComment(uint _id, address _author, string calldata _message) external {}
 
     /**
      * @dev See {IPadelConnect-addPrivateComment}.
      */
-    function addPrivateComment() external {}
+    function addPrivateComment(uint _id, address _author, string calldata _message) external {}
 }
