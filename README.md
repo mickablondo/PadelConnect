@@ -32,15 +32,14 @@ flowchart >
     D -->|Any user| E[ /inscription]
     D -->|Any user| F[ /forum]
     D -->|Any user| G[ /pm]
-    D -->|Any user| H[ /claim]
     A -.->|get tournaments| I((Smart Contract - Forum))
     B -.->|administrate managers| I
     C -.->|manage tournaments| I
     D -.->|get infos| I
     E -.->|add player -> tournament<br/>transfer to manager| I
+    E -.->|add winner| I
     F -.->|get history & add comment| I
     G -.->|get history & add comment| I
-    H -.->|mint| I
     I -.->|add winner| J((Smart Contract - NFT))
     I -.->|mint| J
 ```
