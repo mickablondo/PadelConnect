@@ -128,6 +128,7 @@ interface IPadelConnect {
      * - `_id` must be less than the length of the array
      * - `_winner1` cannot be the zero address
      * - `_winner2` cannot be the zero address
+     * - `_winner1` and `_winner2` cannot be the same addresses
      * 
      * @param _id id of the tournament
      * @param _winner1 the address of one of the winner

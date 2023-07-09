@@ -173,6 +173,8 @@ contract PadelConnect is IPadelConnect, Ownable, PadelConnectNFT {
      * @dev See {IPadelConnect-addWinners}.
      */
     function addWinners(uint _id, address _winner1, address _winner2) external onlyOwner shouldIdTournamentExists(_id) notZeroAddress(_winner1) notZeroAddress(_winner2) {
+        require(_winner1 != _winner2, "Error : Same address for the two players.");
+
         // TODO ENUM finish ???
         address[2] memory temp;
         temp[0] = _winner1;
