@@ -31,10 +31,17 @@ contract PadelConnect is IPadelConnect, Ownable, PadelConnectNFT {
     mapping(address => Tournament) followingTournamentsByPlayers;
 
     /// @notice Map of a tournamentId to the comments
-    mapping(uint => Comment[]) comments;
+    mapping(uint => mapping(uint => Comment)) comments;
+
+    /// @notice Map of a tournamentId to the commentId
+    /// @dev Use it to know the number of comments by tournament
+    mapping(uint => uint) idComments;
 
     /// @notice Map of a tournament to a map of a player address to the private comments
     mapping(uint => mapping(address => Comment[])) private privateComments;
+
+    /// @notice Map of an address to a timestamp
+    mapping(address => uint) lastPostDate;
 
     /// @notice Custom error when payment failed.
     error ErrorDuringPayment();
@@ -69,6 +76,15 @@ contract PadelConnect is IPadelConnect, Ownable, PadelConnectNFT {
     modifier notZeroAddress(address _address) {
          require(_address != address(0), "Cannot be the zero address");
          _;
+    }
+
+    /**
+     * @dev Check the time between two comments
+     * @param _address the address of the author
+     */
+    modifier waitUntilNewPost(address _address) {
+        require(lastPostDate[msg.sender] < block.timestamp - 10, "Wait 10s before new post");
+        _;
     }
 
     /**
@@ -175,15 +191,37 @@ contract PadelConnect is IPadelConnect, Ownable, PadelConnectNFT {
     /**
      * @dev See {IPadelConnect-addComment}.
      */
-    function addComment(uint _id, address _author, string calldata _message) external shouldIdTournamentExists(_id) notZeroAddress(_author) {
-        // require(timestampLastPost[msg.sender] < block.timestamp - 30, "You need to wait 30 secondes between each posts");
-        // mapping(address => uint) public timestampLastPost;
+    function addComment(uint _id, string calldata _message) external shouldIdTournamentExists(_id) waitUntilNewPost(msg.sender) {
+        require(bytes(_message).length > 0, "Cannot be empty");
+
+        comments[_id][idComments[_id]] = Comment(_message, msg.sender);
+        ++idComments[_id];
+        lastPostDate[msg.sender] = block.timestamp;
+
+        emit TournamentCommentAdded(_id);
     }
 
     /**
-     * @dev See {IPadelConnect-addPrivateComment}.
+     * @dev See {IPadelConnect-addPrivateCommentToManager}.
      */
-    function addPrivateComment(uint _id, address _author, string calldata _message) external shouldIdTournamentExists(_id) notZeroAddress(_author) {
+    function addPrivateCommentToManager(uint _id, string calldata _message) external shouldIdTournamentExists(_id) waitUntilNewPost(msg.sender) {
+        require(bytes(_message).length > 0, "Cannot be empty");
 
+        privateComments[_id][msg.sender].push(Comment(_message, msg.sender));
+
+        lastPostDate[msg.sender] = block.timestamp;
+        emit PrivateCommentAdded(_id, msg.sender); // TODO : _author utile ??? oui pour remonter uniquement à l'auteur
+    }
+
+    /**
+     * @dev See {IPadelConnect-addPrivateResponseToPlayer}.
+     */
+    function addPrivateResponseToPlayer(uint _id, address _player, string calldata _message) external shouldIdTournamentExists(_id) notZeroAddress(_player) waitUntilNewPost(msg.sender) {
+        require(bytes(_message).length > 0, "Cannot be empty");
+
+        privateComments[_id][_player].push(Comment(_message, msg.sender));
+
+        lastPostDate[msg.sender] = block.timestamp;
+        emit PrivateCommentAdded(_id, msg.sender); // TODO : _author utile ??? oui pour remonter uniquement à l'auteur
     }
 }

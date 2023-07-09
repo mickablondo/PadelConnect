@@ -140,30 +140,42 @@ interface IPadelConnect {
      *
      * Requirements:
      * - `_id` must be less than the length of the array
-     * - `_author` cannot be the zero address
      * - `_message` cannot be empty
      *
      * Emits a {TournamentCommentAdded} event.
      * 
      * @param _id id of the tournament which represents a subject of the forum
-     * @param _author the author of the comment
      * @param _message the message to add
      */
-    function addComment(uint _id, address _author, string calldata _message) external;
+    function addComment(uint _id, string calldata _message) external;
 
     /**
      * @dev Add comment to a manager of a tournament.
      *
      * Requirements:
      * - `_id` must be less than the length of the array
-     * - `_author` cannot be the zero address
      * - `_message` cannot be empty
      *
      * Emits a {PrivateCommentAdded} event.
      * 
      * @param _id id of the tournament which represents a subject of the forum
-     * @param _author the author of the comment
      * @param _message the message to add
      */
-    function addPrivateComment(uint _id, address _author, string calldata _message) external;
+    function addPrivateCommentToManager(uint _id, string calldata _message) external;
+
+    /**
+     * @dev Add response to a player of a tournament.
+     *
+     * Requirements:
+     * - `_id` must be less than the length of the array
+     * - `_player` cannot be the zero address
+     * - `_message` cannot be empty
+     *
+     * Emits a {PrivateCommentAdded} event.
+     * 
+     * @param _id id of the tournament which represents a subject of the forum
+     * @param _player address of the player
+     * @param _message the message to add
+     */
+    function addPrivateResponseToPlayer(uint _id, address _player, string calldata _message) external;
 }
