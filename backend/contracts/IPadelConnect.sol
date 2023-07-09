@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.20;
 
+// TODO revoir visibilité
+
 /// @title Padel tournament management contract
 /// @notice This interface shows how to interact with the Smart Contract.
 /// @author Mickaël Blondeau
@@ -9,24 +11,25 @@ interface IPadelConnect {
     /// @notice Description of a tournament
     struct Tournament {
         uint id;
-        bytes32 city;
+        string city;
         uint price;
         uint date;
         uint8 maxPlayers;
+        uint8 registrationsAvailable;
         address[2] winners;
     }
 
     /// @notice Description of a manager
     struct Manager {
-        bytes32 lastName;
-        bytes32 firstName;
+        string lastName;
+        string firstName;
         bool isRegistered;
     }
 
     /// @notice Description of a player
     struct Player {
-        bytes32 lastName;
-        bytes32 firstName;
+        string lastName;
+        string firstName;
     }
 
     /// @notice Description of a Comment
@@ -38,12 +41,12 @@ interface IPadelConnect {
     /**
      * @dev Emitted when owner adds a new manager.
      */
-    event ManagerAdded(uint tournamentId);
+    event ManagerAdded(address _address);
 
     /**
      * @dev Emitted when manager adds a new tournament.
      */
-    event TournamentCreated(bytes32 city, uint price, uint date, address[2] winners);
+    event TournamentCreated(string city, uint price, uint date, address[2] winners);
 
     /**
      * @dev Emitted when somebody adds a new comment on a tournament forum.
@@ -71,7 +74,7 @@ interface IPadelConnect {
      * @param _firstName first name of the new manager 
      * @param _lastName last name of the new manager 
      */
-    function addManager(address _address, bytes32 _firstName, bytes32 _lastName) external;
+    function addManager(address _address, string calldata _firstName, string calldata _lastName) external;
 
     /**
      * @dev Add a new tournament.
@@ -90,13 +93,13 @@ interface IPadelConnect {
      * @param _date date of the new tournament
      * @param _maxPlayers maximum number of players
      */
-    function addTournament( bytes32 _city, uint _price, uint _date, uint8 _maxPlayers) external;
+    function addTournament(string calldata _city, uint _price, uint _date, uint8 _maxPlayers) external;
 
     /**
      * @dev Add a new tournament.
      *
      * Requirements:
-     * - `_id` must be greater than 0 and less than the length of the array
+     * - `_id` must be less than the length of the array
      * 
      * @param _id id of the tournament
      */
@@ -106,22 +109,23 @@ interface IPadelConnect {
      * @dev Register a player to a tournament and pay the manager.
      *
      * Requirements:
-     * - `msg.sender` cannot be the zero address
-     * - `msg.value` must be equal to the price of the tournament 
-     * - `_id` must be greater than 0 and less than the length of the array
+     * - `_id` must be less than the length of the array
+     * - `_firstName` cannot be empty
+     * - `_lastName` cannot be empty
+     * - date of the registration must be less than the start date of the tournament
      * 
      * @param _id id of the tournament
      * @param _firstName first name of the player
      * @param _lastName last name of the player
      */
-    function registerPlayer(uint _id, bytes32 _firstName, bytes32 _lastName) payable external;
+    function registerPlayer(uint _id, string calldata _firstName, string calldata _lastName) payable external;
 
     /**
      * @dev Add the two winners of the tournament and call the mint function to send them a NFT reward.
      *
      * Requirements:
      * - `msg.sender` can only be the owner
-     * - `_id` must be greater than 0 and less than the length of the array
+     * - `_id` must be less than the length of the array
      * - `_winner1` cannot be the zero address
      * - `_winner2` cannot be the zero address
      * 
@@ -135,13 +139,13 @@ interface IPadelConnect {
      * @dev Add comment to the forum of a tournament.
      *
      * Requirements:
-     * - `id` must be greater than 0 and less than the length of the array
+     * - `_id` must be less than the length of the array
      * - `_author` cannot be the zero address
      * - `_message` cannot be empty
      *
      * Emits a {TournamentCommentAdded} event.
      * 
-     * @param _id id of the tournament
+     * @param _id id of the tournament which represents a subject of the forum
      * @param _author the author of the comment
      * @param _message the message to add
      */
@@ -151,13 +155,13 @@ interface IPadelConnect {
      * @dev Add comment to a manager of a tournament.
      *
      * Requirements:
-     * - `id` must be greater than 0 and less than the length of the array
+     * - `_id` must be less than the length of the array
      * - `_author` cannot be the zero address
      * - `_message` cannot be empty
      *
      * Emits a {PrivateCommentAdded} event.
      * 
-     * @param _id id of the tournament
+     * @param _id id of the tournament which represents a subject of the forum
      * @param _author the author of the comment
      * @param _message the message to add
      */
