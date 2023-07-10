@@ -1,11 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.20;
  
-import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
-
-// TODO revoir visibilité
 
 /// @title PadelConnect - NFT
 /// @dev This contract mints a NFT to the winners of a tournament.
@@ -42,14 +39,11 @@ contract PadelConnectNFT is ERC721URIStorage {
         string memory _city,
         string memory _firstName,
         string memory _lastName
-    ) internal returns (uint256)
-    {
+    ) internal {
         _tokenIds.increment();
         uint256 newItemId = _tokenIds.current();
         rewards[newItemId] = Reward(_tournamentId, _city, _firstName, _lastName);
         _mint(_player, newItemId);
         _setTokenURI(newItemId, _tokenURI);
- 
-        return newItemId;
     }
 }
