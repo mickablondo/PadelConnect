@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.20;
 
-// TODO revoir visibilité
+import "./LibraryDifficulty.sol";
 
 /// @title Padel tournament management contract
 /// @notice This interface shows how to interact with the Smart Contract.
@@ -14,6 +14,7 @@ interface IPadelConnect {
         string city;
         uint price;
         uint date;
+        LibraryDifficulty.Difficulty difficulty;
         uint8 maxPlayers;
         uint8 registrationsAvailable;
         address[2] winners;
@@ -91,19 +92,10 @@ interface IPadelConnect {
      * @param _city city name of the new tournament 
      * @param _price price to register at the tournament 
      * @param _date date of the new tournament
+     * @param _diff the difficulty of the tournament
      * @param _maxPlayers maximum number of players
      */
-    function addTournament(string calldata _city, uint _price, uint _date, uint8 _maxPlayers) external;
-
-    /**
-     * @dev Add a new tournament.
-     *
-     * Requirements:
-     * - `_id` must be less than the length of the array
-     * 
-     * @param _id id of the tournament
-     */
-    function getTournament(uint _id) external view returns(Tournament memory);
+    function addTournament(string calldata _city, uint _price, uint _date, uint8 _diff, uint8 _maxPlayers) external;
 
     /**
      * @dev Register a player to a tournament and pay the manager.
