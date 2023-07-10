@@ -61,4 +61,5 @@ flowchart >
 ### Frontend
 ### Tests unitaires
 npx hardhat node  
-npx hardhat test
+npx hardhat test  
+npx hardhat coverage

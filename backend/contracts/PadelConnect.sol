@@ -1,11 +1,13 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.18;
+pragma solidity 0.8.20;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "./IPadelConnect.sol";
 import "./PadelConnectNFT.sol";
 
+
 // TODO revoir visibilité
+// TODO lib pour ERROR ?
 
 /// @title Padel tournament management contract
 /// @notice This contract makes it possible to manage padel tournaments and to connect the different users.
@@ -135,7 +137,7 @@ contract PadelConnect is IPadelConnect, Ownable, PadelConnectNFT {
 
         linkManagerTournament[id] = msg.sender;
 
-        emit TournamentCreated(_city, _price, _date, temp);
+        emit TournamentCreated(_city, _price, _date);
     }
 
     /**

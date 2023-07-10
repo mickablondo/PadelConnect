@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.18;
+pragma solidity 0.8.20;
 
 import {LibraryDifficulty} from "./LibraryDifficulty.sol";
 
@@ -47,7 +47,7 @@ interface IPadelConnect {
     /**
      * @dev Emitted when manager adds a new tournament.
      */
-    event TournamentCreated(string city, uint price, uint date, address[2] winners);
+    event TournamentCreated(string city, uint price, uint date);
 
     /**
      * @dev Emitted when somebody adds a new comment on a tournament forum.
