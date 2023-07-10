@@ -31,7 +31,7 @@ contract PadelConnect is IPadelConnect, Ownable, PadelConnectNFT {
     mapping(address => Tournament) followingTournamentsByPlayers;
 
     /// @notice Map of a tournamentId to the comments
-    mapping(uint => mapping(uint => Comment)) comments;
+    mapping(uint => mapping(uint => Comment)) public comments; // TODO: SUPPRIMER PUBLIC
 
     /// @notice Map of a tournamentId to the commentId
     /// @dev Use it to know the number of comments by tournament
@@ -56,7 +56,7 @@ contract PadelConnect is IPadelConnect, Ownable, PadelConnectNFT {
      * @dev Sender must be a manager registered
      */
     modifier onlyManagers() {
-        require(managers[msg.sender].isRegistered, "Forbidden access, you're not a manager !");
+        require(managers[msg.sender].isRegistered, "Forbidden access");
         _;
     }
 
@@ -79,6 +79,15 @@ contract PadelConnect is IPadelConnect, Ownable, PadelConnectNFT {
     }
 
     /**
+     * @dev The string must not be empty
+     * @param _field the string to be checked
+     */
+    modifier notEmptyString(string memory _field) {
+         require(bytes(_field).length > 0, "Field cannot be empty");
+         _;
+    }
+
+    /**
      * @dev Check the time between two comments
      * @param _address the address of the author
      */
@@ -90,10 +99,8 @@ contract PadelConnect is IPadelConnect, Ownable, PadelConnectNFT {
     /**
      * @dev See {IPadelConnect-addManager}.
      */
-    function addManager(address _address, string calldata _firstName, string calldata _lastName) external onlyOwner notZeroAddress(_address) {
+    function addManager(address _address, string calldata _firstName, string calldata _lastName) external onlyOwner notZeroAddress(_address) notEmptyString(_firstName) notEmptyString(_lastName) {
         require(!managers[_address].isRegistered, "Already registered");
-        require(bytes(_firstName).length > 0, "First name cannot be empty");
-        require(bytes(_lastName).length > 0, "First name cannot be empty");
 
         managers[_address].lastName = _lastName;
         managers[_address].firstName = _firstName;
@@ -105,8 +112,7 @@ contract PadelConnect is IPadelConnect, Ownable, PadelConnectNFT {
     /**
      * @dev See {IPadelConnect-addTournament}.
      */
-    function addTournament(string calldata _city, uint _price, uint _date, uint8 _maxPlayers) external onlyManagers {
-        require(bytes(_city).length > 0, "City cannot be empty");
+    function addTournament(string calldata _city, uint _price, uint _date, uint8 _diff,uint8 _maxPlayers) external onlyManagers notEmptyString(_city) {
         require(_price > 0, "Mandatory price");
         require(_date > block.timestamp, "Date must be in the future");
         require(_maxPlayers > 0 && _maxPlayers % 2 == 0, "Padel is played by 2");
@@ -120,6 +126,7 @@ contract PadelConnect is IPadelConnect, Ownable, PadelConnectNFT {
                 _city,
                 _price,
                 _date,
+                LibraryDifficulty.getDifficultyFromUint(_diff),
                 _maxPlayers,
                 _maxPlayers, // nombre de places disponibles = nombre de joueurs autorisés à la création du tournoi
                 temp
@@ -132,19 +139,9 @@ contract PadelConnect is IPadelConnect, Ownable, PadelConnectNFT {
     }
 
     /**
-     * @dev See {IPadelConnect-getTournament}.
-     */
-    function getTournament(uint _id) external view shouldIdTournamentExists(_id) returns(Tournament memory) {
-        return tournaments[_id]; // TODO : utile car public ???
-    }
-
-    /**
      * @dev See {IPadelConnect-registerPlayer}.
      */
-    function registerPlayer(uint _id, string calldata _firstName, string calldata _lastName) payable external shouldIdTournamentExists(_id) {
-        require(bytes(_firstName).length > 0, "Cannot be empty");
-        require(bytes(_lastName).length > 0, "Cannot be empty");
-
+    function registerPlayer(uint _id, string calldata _firstName, string calldata _lastName) payable external shouldIdTournamentExists(_id) notEmptyString(_firstName) notEmptyString(_lastName) {
         Tournament memory tournament = tournaments[_id];
 
         if(tournament.date < block.timestamp) {
@@ -155,16 +152,13 @@ contract PadelConnect is IPadelConnect, Ownable, PadelConnectNFT {
             revert CompleteTournament();
         }
 
-        // TODO tournament.price vs msg.value
-        // TODO Reentrancy Guard from OZ ?
-        (bool sent, ) = address(linkManagerTournament[_id]).call{value: msg.value}("");
+        (bool sent, ) = address(linkManagerTournament[_id]).call{value: tournament.price * (1 wei)}("");
         if(!sent) {
             revert ErrorDuringPayment();
         }
 
         players[msg.sender] = Player(_lastName, _firstName);
- 
-        // TODO : tester différentes façons et vérifier quelle est la moins coûteuse
+
         --tournament.registrationsAvailable;
         tournaments[_id].registrationsAvailable = tournament.registrationsAvailable;
     }
@@ -193,9 +187,7 @@ contract PadelConnect is IPadelConnect, Ownable, PadelConnectNFT {
     /**
      * @dev See {IPadelConnect-addComment}.
      */
-    function addComment(uint _id, string calldata _message) external shouldIdTournamentExists(_id) waitUntilNewPost(msg.sender) {
-        require(bytes(_message).length > 0, "Cannot be empty");
-
+    function addComment(uint _id, string calldata _message) external shouldIdTournamentExists(_id) waitUntilNewPost(msg.sender) notEmptyString(_message) {
         comments[_id][idComments[_id]] = Comment(_message, msg.sender);
         ++idComments[_id];
         lastPostDate[msg.sender] = block.timestamp;
@@ -206,9 +198,7 @@ contract PadelConnect is IPadelConnect, Ownable, PadelConnectNFT {
     /**
      * @dev See {IPadelConnect-addPrivateCommentToManager}.
      */
-    function addPrivateCommentToManager(uint _id, string calldata _message) external shouldIdTournamentExists(_id) waitUntilNewPost(msg.sender) {
-        require(bytes(_message).length > 0, "Cannot be empty");
-
+    function addPrivateCommentToManager(uint _id, string calldata _message) external shouldIdTournamentExists(_id) waitUntilNewPost(msg.sender) notEmptyString(_message) {
         privateComments[_id][msg.sender].push(Comment(_message, msg.sender));
 
         lastPostDate[msg.sender] = block.timestamp;
@@ -218,9 +208,7 @@ contract PadelConnect is IPadelConnect, Ownable, PadelConnectNFT {
     /**
      * @dev See {IPadelConnect-addPrivateResponseToPlayer}.
      */
-    function addPrivateResponseToPlayer(uint _id, address _player, string calldata _message) external shouldIdTournamentExists(_id) notZeroAddress(_player) waitUntilNewPost(msg.sender) {
-        require(bytes(_message).length > 0, "Cannot be empty");
-
+    function addPrivateResponseToPlayer(uint _id, address _player, string calldata _message) external shouldIdTournamentExists(_id) notZeroAddress(_player) waitUntilNewPost(msg.sender) notEmptyString(_message) {
         privateComments[_id][_player].push(Comment(_message, msg.sender));
 
         lastPostDate[msg.sender] = block.timestamp;
