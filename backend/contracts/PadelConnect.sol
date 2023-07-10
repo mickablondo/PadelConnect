@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.20;
+pragma solidity 0.8.18;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "./IPadelConnect.sol";
@@ -169,7 +169,6 @@ contract PadelConnect is IPadelConnect, Ownable, PadelConnectNFT {
     function addWinners(uint _id, address _winner1, address _winner2) external onlyOwner shouldIdTournamentExists(_id) notZeroAddress(_winner1) notZeroAddress(_winner2) {
         require(_winner1 != _winner2, "Error : Same address for the two players.");
 
-        // TODO ENUM finish ???
         address[2] memory temp;
         temp[0] = _winner1;
         temp[1] = _winner2;

@@ -60,3 +60,5 @@ flowchart >
 ### Backend
 ### Frontend
 ### Tests unitaires
+npx hardhat node  
+npx hardhat test

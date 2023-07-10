@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.20;
+pragma solidity 0.8.18;
 
-import "./LibraryDifficulty.sol";
+import {LibraryDifficulty} from "./LibraryDifficulty.sol";
 
 /// @title Padel tournament management contract
 /// @notice This interface shows how to interact with the Smart Contract.
