@@ -1,6 +1,7 @@
 const { ethers } = require('hardhat');
 const { expect } = require('chai');
 const { BN, expectRevert, expectEvent } = require('@openzeppelin/test-helpers');
+const { time } = require("@nomicfoundation/hardhat-network-helpers");
 
 describe("Test PadelConnect", function() {
 
@@ -120,7 +121,7 @@ describe("Test PadelConnect", function() {
             );
         });
 
-        it('should return the informations of a tournament', async function() {
+        it('should return the informations of a tournament with a difficulty p500', async function() {
             await pcContract.connect(manager).addTournament('rouen', 2, 2067697299, 3, 16);
             let tournament = await pcContract.tournaments(0);
             expect(tournament.id).to.be.equal(new BN(0));
@@ -131,15 +132,41 @@ describe("Test PadelConnect", function() {
             expect(tournament.maxPlayers).to.be.equal(new BN(16));
             expect(tournament.registrationsAvailable).to.be.equal(tournament.maxPlayers);
         });
-    });
 
-    describe("Registering players", function() {
-        beforeEach(async function() {
-            // TODO : add manager / tournament
+        it('should return the difficulty p25', async function() {
+            await pcContract.connect(manager).addTournament('rouen', 2, 2067697299, 0, 16);
+            let tournament = await pcContract.tournaments(0);
+            expect(tournament.difficulty).to.be.equal(new BN(0));
         });
 
-        it('should add a new player', async function() {
-            // TODO
+        it('should return the difficulty p100', async function() {
+            await pcContract.connect(manager).addTournament('rouen', 2, 2067697299, 1, 16);
+            let tournament = await pcContract.tournaments(0);
+            expect(tournament.difficulty).to.be.equal(new BN(1));
+        });
+
+        it('should return the difficulty p250', async function() {
+            await pcContract.connect(manager).addTournament('rouen', 2, 2067697299, 2, 16);
+            let tournament = await pcContract.tournaments(0);
+            expect(tournament.difficulty).to.be.equal(new BN(2));
+        });
+
+        it('should return the difficulty p1000', async function() {
+            await pcContract.connect(manager).addTournament('rouen', 2, 2067697299, 4, 16);
+            let tournament = await pcContract.tournaments(0);
+            expect(tournament.difficulty).to.be.equal(new BN(4));
+        });
+
+        it('should return the difficulty p2000', async function() {
+            await pcContract.connect(manager).addTournament('rouen', 2, 2067697299, 5, 16);
+            let tournament = await pcContract.tournaments(0);
+            expect(tournament.difficulty).to.be.equal(new BN(5));
+        });
+
+        it('should return an unknown difficulty', async function() {
+            await pcContract.connect(manager).addTournament('rouen', 2, 2067697299, 7, 16);
+            let tournament = await pcContract.tournaments(0);
+            expect(tournament.difficulty).to.be.equal(new BN(6));
         });
     });
 
@@ -148,7 +175,7 @@ describe("Test PadelConnect", function() {
             // TODO : add manager / tournament / players
         });
 
-        it('should add a new player', async function() {
+        it('should add the winners', async function() {
             // TODO
         });
     });
@@ -170,6 +197,68 @@ describe("Test PadelConnect", function() {
 
         it('should add a new private commment', async function() {
             // TODO
+        });
+    });
+
+    describe("Registering players", function() {
+        beforeEach(async function() {
+            await pcContract.connect(owner).addManager(manager, 'john', 'doe');
+            await pcContract.connect(manager).addTournament('rouen', 20000000000000, 2067697299, 3, 16);
+        });
+
+        it('should add a new player', async function() {
+            let tournament = await pcContract.tournaments(0);
+            const registrationsAvailable = tournament.registrationsAvailable;
+            await pcContract.connect(player1).registerPlayer(0, 'roger', 'federer', {
+                value: ethers.parseEther("0.00002")
+            });
+            tournament = await pcContract.tournaments(0);
+            expect(tournament.registrationsAvailable).to.be.lt(registrationsAvailable);
+        });
+
+        it('should revert if the id does not exist', async function() {
+            await expectRevert(
+                pcContract.connect(player1).registerPlayer(1, 'roger', 'federer', {
+                    value: ethers.parseEther("0.00002")
+                }),
+                "Wrong id sent"
+            );
+        });
+
+        it('should revert when the first name is empty', async function() {
+            await expectRevert(
+                pcContract.connect(player1).registerPlayer(0, '', 'federer', {
+                    value: ethers.parseEther("0.00002")
+                }),
+                "Field cannot be empty"
+            );
+        });
+
+        it('should revert when the last name is empty', async function() {
+            await expectRevert(
+                pcContract.connect(player1).registerPlayer(0, 'roger', '', {
+                    value: ethers.parseEther("0.00002")
+                }),
+                "Field cannot be empty"
+            );
+        });
+
+        it('should revert when the tournament is complete', async function() {
+            // TODO CompleteTournament()
+        });
+
+        it('should revert when the value sent is not the good one', async function() {
+            // TODO WrongValueToPay
+        });
+
+        it('should revert when tournament is already started', async function() {
+            await time.increaseTo(2087697299);
+            await expectRevert(
+                pcContract.connect(player1).registerPlayer(0, 'roger', 'federer', {
+                    value: ethers.parseEther("0.00002")
+                }),
+                "RegistrationEnded"
+            );
         });
     });
 });

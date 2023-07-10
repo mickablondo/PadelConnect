@@ -52,6 +52,9 @@ contract PadelConnect is IPadelConnect, Ownable, PadelConnectNFT {
     /// @notice Custom error when the registration phase is finished
     error RegistrationEnded();
 
+    /// @notice Custom error when the value send is not equals to price of the tournament
+    error WrongValueToPay();
+
     /**
      * @dev Sender must be a manager registered
      */
@@ -152,7 +155,11 @@ contract PadelConnect is IPadelConnect, Ownable, PadelConnectNFT {
             revert CompleteTournament();
         }
 
-        (bool sent, ) = address(linkManagerTournament[_id]).call{value: tournament.price * (1 wei)}("");
+        if(msg.value != tournament.price) {
+            revert WrongValueToPay();
+        }
+
+        (bool sent, ) = address(linkManagerTournament[_id]).call{value: msg.value}("");
         if(!sent) {
             revert ErrorDuringPayment();
         }
