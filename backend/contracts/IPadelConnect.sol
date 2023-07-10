@@ -26,7 +26,8 @@ interface IPadelConnect {
         Difficulty difficulty;
         uint8 maxPlayers;
         uint8 registrationsAvailable;
-        address[2] winners;
+        address winner1;
+        address winner2;
     }
 
     /// @notice Description of a manager

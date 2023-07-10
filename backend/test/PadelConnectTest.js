@@ -131,6 +131,8 @@ describe("Test PadelConnect", function() {
             expect(tournament.difficulty).to.be.equal(new BN(3));
             expect(tournament.maxPlayers).to.be.equal(new BN(16));
             expect(tournament.registrationsAvailable).to.be.equal(tournament.maxPlayers);
+            expect(tournament.winner1).to.be.equal(ZERO_ADDRESS);
+            expect(tournament.winner2).to.be.equal(ZERO_ADDRESS);
         });
 
         it('should return the difficulty p25', async function() {
@@ -170,33 +172,89 @@ describe("Test PadelConnect", function() {
         });
     });
 
-    describe("Adding winners", function() {
+    describe("After registrering players", function() {
         beforeEach(async function() {
-            // TODO : add manager / tournament / players
+            await pcContract.connect(owner).addManager(manager, 'john', 'doe');
+            await pcContract.connect(manager).addTournament('rouen', 20000000000000, 2067697299, 3, 16);
+            await pcContract.connect(player1).registerPlayer(0, 'roger', 'federer', {
+                value: ethers.parseEther("0.00002")
+            });
+            await pcContract.connect(player2).registerPlayer(0, 'rafael', 'nadal', {
+                value: ethers.parseEther("0.00002")
+            });
         });
 
-        it('should add the winners', async function() {
-            // TODO
-        });
-    });
+        context("Adding winners", function() {
+            it('should add the winners', async function() {
+                await pcContract.connect(owner).addWinners(0, player1, player2);
+                let tournament = await pcContract.tournaments(0);
+                expect(tournament.winner1).to.be.equal(player1.address);
+                expect(tournament.winner2).to.be.equal(player2.address);
+            });
 
-    describe("Forum", function() {
-        beforeEach(async function() {
-            // TODO : add manager / tournament / many players
+            it('should revert when caller is not the owner', async function() {
+                await expectRevert(
+                    pcContract.connect(manager).addWinners(0, player1, player2),
+                    "Ownable: caller is not the owner"
+                );
+            });
+
+            it('should revert if the two winners are the same person', async function() {
+                await expectRevert(
+                    pcContract.connect(owner).addWinners(0, player1, player1),
+                    "Error : Same address for the two players."
+                );
+            });
+
+            it('should add the winners', async function() {
+                await expectRevert(
+                    pcContract.connect(owner).addWinners(12, player1, player1),
+                    "Wrong id sent"
+                );
+            });
+
+            it('should add the winners', async function() {
+                await expectRevert(
+                    pcContract.connect(owner).addWinners(0, ZERO_ADDRESS, player2),
+                    "Cannot be the zero address"
+                );
+            });
+
+            it('should add the winners', async function() {
+                await expectRevert(
+                    pcContract.connect(owner).addWinners(0, player1, ZERO_ADDRESS),
+                    "Cannot be the zero address"
+                );
+            });
+        });
+    
+        context("Forum", function() {
+            it('should add a new commment', async function() {
+                // TODO test event
+            });
+            // TODO shouldIdTournamentExists
+            // TODO waitUntilNewPost
+            // TODO notEmptyString
+        });
+    
+        context("Private messages from a player", function() {
+            /* addPrivateCommentToManager */
+            it('should add a new private commment', async function() {
+                // TODO test event
+            });
+            // TODO shouldIdTournamentExists
+            // TODO waitUntilNewPost
+            // TODO notEmptyString
         });
 
-        it('should add a new commment', async function() {
-            // TODO
-        });
-    });
-
-    describe("Private messages", function() {
-        beforeEach(async function() {
-            // TODO : add manager / tournament / many players
-        });
-
-        it('should add a new private commment', async function() {
-            // TODO
+        context("Response to the private messages by the manager", function() {
+            it('should add a new private commment', async function() {
+                // TODO test event
+            });
+            // TODO shouldIdTournamentExists
+            // TODO waitUntilNewPost
+            // TODO notEmptyString
+            // TODO notZeroAddress
         });
     });
 
@@ -204,6 +262,7 @@ describe("Test PadelConnect", function() {
         beforeEach(async function() {
             await pcContract.connect(owner).addManager(manager, 'john', 'doe');
             await pcContract.connect(manager).addTournament('rouen', 20000000000000, 2067697299, 3, 16);
+            await pcContract.connect(manager).addTournament('caen', 20000000000000, 2067697299, 1, 2);
         });
 
         it('should add a new player', async function() {
@@ -218,7 +277,7 @@ describe("Test PadelConnect", function() {
 
         it('should revert if the id does not exist', async function() {
             await expectRevert(
-                pcContract.connect(player1).registerPlayer(1, 'roger', 'federer', {
+                pcContract.connect(player1).registerPlayer(5, 'roger', 'federer', {
                     value: ethers.parseEther("0.00002")
                 }),
                 "Wrong id sent"
@@ -244,11 +303,27 @@ describe("Test PadelConnect", function() {
         });
 
         it('should revert when the tournament is complete', async function() {
-            // TODO CompleteTournament()
+            await pcContract.connect(player1).registerPlayer(1, 'roger', 'federer', {
+                    value: ethers.parseEther("0.00002")
+            });
+            await pcContract.connect(player2).registerPlayer(1, 'rafael', 'nadal', {
+                value: ethers.parseEther("0.00002")
+            });
+            await expectRevert(
+                pcContract.connect(player3).registerPlayer(1, 'micka', 'blondo', {
+                    value: ethers.parseEther("0.00002")
+                }),
+                "CompleteTournament"
+            );
         });
 
         it('should revert when the value sent is not the good one', async function() {
-            // TODO WrongValueToPay
+            await expectRevert(
+                pcContract.connect(player1).registerPlayer(1, 'roger', 'federer', {
+                    value: ethers.parseEther("0.0088")
+                }),
+                "WrongValueToPay"
+            );
         });
 
         it('should revert when tournament is already started', async function() {

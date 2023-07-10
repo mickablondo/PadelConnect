@@ -121,7 +121,7 @@ contract PadelConnect is IPadelConnect, Ownable, PadelConnectNFT {
         require(_maxPlayers > 0 && _maxPlayers % 2 == 0, "Padel is played by 2");
 
         uint id = tournaments.length;
-        address[2] memory temp;
+        address temp;
 
         tournaments.push(
             Tournament(
@@ -132,6 +132,7 @@ contract PadelConnect is IPadelConnect, Ownable, PadelConnectNFT {
                 getDifficultyFromUint(_diff),
                 _maxPlayers,
                 _maxPlayers, // nombre de places disponibles = nombre de joueurs autorisés à la création du tournoi
+                temp,
                 temp
             )
         );
@@ -176,10 +177,8 @@ contract PadelConnect is IPadelConnect, Ownable, PadelConnectNFT {
     function addWinners(uint _id, address _winner1, address _winner2) external onlyOwner shouldIdTournamentExists(_id) notZeroAddress(_winner1) notZeroAddress(_winner2) {
         require(_winner1 != _winner2, "Error : Same address for the two players.");
 
-        address[2] memory temp;
-        temp[0] = _winner1;
-        temp[1] = _winner2;
-        tournaments[_id].winners = temp;
+        tournaments[_id].winner1 = _winner1;
+        tournaments[_id].winner2 = _winner2;
 
         string memory city = tournaments[_id].city;
 

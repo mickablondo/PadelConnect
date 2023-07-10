@@ -62,4 +62,5 @@ flowchart >
 ### Tests unitaires
 npx hardhat node  
 npx hardhat test  
-npx hardhat coverage
+npx hardhat coverage  
+Ajout de la librairie @nomicfoundation/hardhat-network-helpers pour manipuler la date de la blockchain. 
