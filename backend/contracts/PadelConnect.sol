@@ -5,9 +5,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "./IPadelConnect.sol";
 import "./PadelConnectNFT.sol";
 
-
 // TODO revoir visibilité
-// TODO lib pour ERROR ?
 
 /// @title Padel tournament management contract
 /// @notice This contract makes it possible to manage padel tournaments and to connect the different users.
@@ -33,7 +31,7 @@ contract PadelConnect is IPadelConnect, Ownable, PadelConnectNFT {
     mapping(address => Tournament) followingTournamentsByPlayers;
 
     /// @notice Map of a tournamentId to the comments
-    mapping(uint => mapping(uint => Comment)) public comments; // TODO: SUPPRIMER PUBLIC
+    mapping(uint => mapping(uint => Comment)) comments;
 
     /// @notice Map of a tournamentId to the commentId
     /// @dev Use it to know the number of comments by tournament
@@ -128,7 +126,7 @@ contract PadelConnect is IPadelConnect, Ownable, PadelConnectNFT {
                 _city,
                 _price,
                 _date,
-                LibraryDifficulty.getDifficultyFromUint(_diff),
+                getDifficultyFromUint(_diff),
                 _maxPlayers,
                 _maxPlayers, // nombre de places disponibles = nombre de joueurs autorisés à la création du tournoi
                 temp
@@ -214,5 +212,18 @@ contract PadelConnect is IPadelConnect, Ownable, PadelConnectNFT {
 
         lastPostDate[msg.sender] = block.timestamp;
         emit PrivateCommentAdded(_id, msg.sender); // TODO : _author utile ??? oui pour remonter uniquement à l'auteur
+    }
+
+    /// @notice Returns the difficulty value from the enum
+    /// @param _difficulty the difficulty in uint
+    /// @return the difficulty from the enum
+    function getDifficultyFromUint(uint _difficulty) private pure returns(Difficulty) {
+        if(_difficulty == 0) return Difficulty.p25; 
+        if(_difficulty == 1) return Difficulty.p100;
+        if(_difficulty == 2) return Difficulty.p250;
+        if(_difficulty == 3) return Difficulty.p500;
+        if(_difficulty == 4) return Difficulty.p1000;
+        if(_difficulty == 5) return Difficulty.p2000;
+        return Difficulty.UNKNOWN;
     }
 }

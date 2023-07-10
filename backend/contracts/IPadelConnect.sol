@@ -1,12 +1,21 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.20;
 
-import {LibraryDifficulty} from "./LibraryDifficulty.sol";
-
 /// @title Padel tournament management contract
 /// @notice This interface shows how to interact with the Smart Contract.
 /// @author Mickaël Blondeau
 interface IPadelConnect {
+
+    /// @notice Enum of the differents diffulcties of the tournaments
+    enum Difficulty {
+        p25,
+        p100,
+        p250,
+        p500,
+        p1000,
+        p2000,
+        UNKNOWN
+    }
 
     /// @notice Description of a tournament
     struct Tournament {
@@ -14,7 +23,7 @@ interface IPadelConnect {
         string city;
         uint price;
         uint date;
-        LibraryDifficulty.Difficulty difficulty;
+        Difficulty difficulty;
         uint8 maxPlayers;
         uint8 registrationsAvailable;
         address[2] winners;
