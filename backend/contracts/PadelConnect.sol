@@ -33,7 +33,7 @@ contract PadelConnect is IPadelConnect, Ownable, PadelConnectNFT {
     /// @notice Map of a tournamentId to the comments
     mapping(uint => mapping(uint => Comment)) public comments;
 
-    /// @notice Map of a tournamentId to the commentId
+    /// @notice Map of a tournamentId to the max commentId
     /// @dev Use it to know the number of comments by tournament
     mapping(uint => uint) idComments;
 
