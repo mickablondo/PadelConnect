@@ -1,15 +1,15 @@
-const { ethers } = require('hardhat');
+const { ethers, network } = require('hardhat');
 const { expect } = require('chai');
-const { BN, expectRevert, expectEvent } = require('@openzeppelin/test-helpers');
+const { BN, expectRevert } = require('@openzeppelin/test-helpers');
 const { time } = require("@nomicfoundation/hardhat-network-helpers");
 
 describe("Test PadelConnect", function() {
 
     const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
-    let pcContract, owner, manager, player1, player2, player3;
+    let pcContract, owner, manager, player1, player2, player3, player4;
 
     beforeEach(async function() {
-        [owner, manager, player1, player2, player3] = await ethers.getSigners();
+        [owner, manager, player1, player2, player3, player4] = await ethers.getSigners();
         const contract = await ethers.getContractFactory("PadelConnect");
         pcContract = await contract.deploy();
     });
@@ -230,31 +230,120 @@ describe("Test PadelConnect", function() {
     
         context("Forum", function() {
             it('should add a new commment', async function() {
-                // TODO test event
+                await expect(pcContract.connect(player1).addComment(0, "Hello everyone"))
+                .to.emit(
+                    pcContract,
+                    'TournamentCommentAdded'
+                ).withArgs(
+                    0
+                );
             });
-            // TODO shouldIdTournamentExists
-            // TODO waitUntilNewPost
-            // TODO notEmptyString
+
+            it('should revert if id does not exist', async function() {
+                await expectRevert(
+                    pcContract.connect(player1).addComment(112, "Hello everyone"),
+                    "Wrong id sent"
+                );
+            });
+
+            it('should revert when player send many messages in a short time', async function() {
+                pcContract.connect(player2).addComment(0, "Hello everyone");
+                await expectRevert(
+                    pcContract.connect(player2).addComment(0, "How are you ?"),
+                    "Wait 10s before new post"
+                );
+            });
+
+            it('should revert if message is empty', async function() {
+                await expectRevert(
+                    pcContract.connect(player3).addComment(0, ''),
+                    "Field cannot be empty"
+                );
+            });
         });
     
         context("Private messages from a player", function() {
-            /* addPrivateCommentToManager */
             it('should add a new private commment', async function() {
-                // TODO test event
+                await expect(pcContract.connect(player1).addPrivateCommentToManager(0, "Hello manager"))
+                .to.emit(
+                    pcContract,
+                    'PrivateCommentAdded'
+                ).withArgs(
+                    0,
+                    player1.address
+                );
             });
-            // TODO shouldIdTournamentExists
-            // TODO waitUntilNewPost
-            // TODO notEmptyString
+
+            it('should revert if id does not exist', async function() {
+                await expectRevert(
+                    pcContract.connect(player1).addPrivateCommentToManager(112, "Hello manager"),
+                    "Wrong id sent"
+                );
+            });
+
+            it('should revert when player send many messages in a short time', async function() {
+                pcContract.connect(player2).addPrivateCommentToManager(0, "Hello manager");
+                await expectRevert(
+                    pcContract.connect(player2).addPrivateCommentToManager(0, "How are you ?"),
+                    "Wait 10s before new post"
+                );
+            });
+
+            it('should revert if message is empty', async function() {
+                await expectRevert(
+                    pcContract.connect(player3).addPrivateCommentToManager(0, ''),
+                    "Field cannot be empty"
+                );
+            });
         });
 
         context("Response to the private messages by the manager", function() {
-            it('should add a new private commment', async function() {
-                // TODO test event
+            it('should add a new private response', async function() {
+                await expect(pcContract.connect(manager).addPrivateResponseToPlayer(0, player1, "Hello player"))
+                .to.emit(
+                    pcContract,
+                    'PrivateResponseAdded'
+                ).withArgs(
+                    0,
+                    player1.address
+                );
             });
-            // TODO shouldIdTournamentExists
-            // TODO waitUntilNewPost
-            // TODO notEmptyString
-            // TODO notZeroAddress
+
+            it('should revert when caller is not a manager', async function() {
+                await expectRevert(
+                    pcContract.connect(player1).addPrivateResponseToPlayer(0, player1, "Hello player"),
+                    "Forbidden access"
+                );
+            });
+
+            it('should revert if id does not exist', async function() {
+                await expectRevert(
+                    pcContract.connect(manager).addPrivateResponseToPlayer(112, player1, "Hello player"),
+                    "Wrong id sent"
+                );
+            });
+
+            it('should revert when player send many messages in a short time', async function() {
+                pcContract.connect(manager).addPrivateResponseToPlayer(0, player1, "Hello player");
+                await expectRevert(
+                    pcContract.connect(manager).addPrivateResponseToPlayer(0, player1, "Ready player one ?"),
+                    "Wait 10s before new post"
+                );
+            });
+
+            it('should revert if message is empty', async function() {
+                await expectRevert(
+                    pcContract.connect(manager).addPrivateResponseToPlayer(0, player1, ''),
+                    "Field cannot be empty"
+                );
+            });
+
+            it('should revert when player address is the zero address', async function() {
+                await expectRevert(
+                    pcContract.connect(manager).addPrivateResponseToPlayer(0, ZERO_ADDRESS, "Hello player"),
+                    "Cannot be the zero address"
+                );
+            });
         });
     });
 
@@ -324,6 +413,19 @@ describe("Test PadelConnect", function() {
                 }),
                 "WrongValueToPay"
             );
+        });
+
+        it('should revert when there is an error during payment', async function() {
+            // await network.provider.send("hardhat_setBalance", [
+            //     "0x9965507D1a55bcC2695C58ba16FB37d819B0A4dc",
+            //     "0x1000" // balance of 4096 wei
+            //   ]);
+            // await expectRevert(
+            //     pcContract.connect(player4).registerPlayer(1, 'roger', 'federer', {
+            //         value: ethers.parseEther("0.00002")
+            //     }),
+            //     "ErrorDuringPayment"
+            // );
         });
 
         it('should revert when tournament is already started', async function() {
