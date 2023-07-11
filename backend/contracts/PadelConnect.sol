@@ -192,7 +192,7 @@ contract PadelConnect is IPadelConnect, Ownable, PadelConnectNFT {
     /**
      * @dev See {IPadelConnect-addComment}.
      */
-    function addComment(uint _id, string calldata _message) external shouldIdTournamentExists(_id) waitUntilNewPost(msg.sender) notEmptyString(_message) {
+    function addComment(uint _id, string calldata _message) external shouldIdTournamentExists(_id) notEmptyString(_message) waitUntilNewPost(msg.sender) {
         comments[_id][idComments[_id]] = Comment(_message, msg.sender);
         ++idComments[_id];
         lastPostDate[msg.sender] = block.timestamp;
@@ -203,7 +203,7 @@ contract PadelConnect is IPadelConnect, Ownable, PadelConnectNFT {
     /**
      * @dev See {IPadelConnect-addPrivateCommentToManager}.
      */
-    function addPrivateCommentToManager(uint _id, string calldata _message) external shouldIdTournamentExists(_id) waitUntilNewPost(msg.sender) notEmptyString(_message) {
+    function addPrivateCommentToManager(uint _id, string calldata _message) external shouldIdTournamentExists(_id) notEmptyString(_message) waitUntilNewPost(msg.sender) {
         privateComments[_id][msg.sender].push(Comment(_message, msg.sender));
 
         lastPostDate[msg.sender] = block.timestamp;
@@ -213,11 +213,11 @@ contract PadelConnect is IPadelConnect, Ownable, PadelConnectNFT {
     /**
      * @dev See {IPadelConnect-addPrivateResponseToPlayer}.
      */
-    function addPrivateResponseToPlayer(uint _id, address _player, string calldata _message) external shouldIdTournamentExists(_id) notZeroAddress(_player) waitUntilNewPost(msg.sender) notEmptyString(_message) {
+    function addPrivateResponseToPlayer(uint _id, address _player, string calldata _message) external onlyManagers() shouldIdTournamentExists(_id) notZeroAddress(_player) notEmptyString(_message) waitUntilNewPost(msg.sender) {
         privateComments[_id][_player].push(Comment(_message, msg.sender));
 
         lastPostDate[msg.sender] = block.timestamp;
-        emit PrivateCommentAdded(_id, msg.sender); // TODO : _author utile ??? oui pour remonter uniquement à l'auteur
+        emit PrivateResponseAdded(_id, _player); // TODO : _author utile ??? oui pour remonter uniquement à l'auteur
     }
 
     /// @notice Returns the difficulty value from the enum
