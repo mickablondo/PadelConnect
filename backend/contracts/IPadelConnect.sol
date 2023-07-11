@@ -21,7 +21,6 @@ interface IPadelConnect {
     struct Tournament {
         uint id;
         string city;
-        uint price;
         uint date;
         Difficulty difficulty;
         uint8 maxPlayers;
@@ -57,7 +56,7 @@ interface IPadelConnect {
     /**
      * @dev Emitted when manager adds a new tournament.
      */
-    event TournamentCreated(string city, uint price, uint date);
+    event TournamentCreated(string city, uint date);
 
     /**
      * @dev Emitted when somebody adds a new comment on a tournament forum.
@@ -98,19 +97,17 @@ interface IPadelConnect {
      * Requirements:
      * - `msg.sender` can only be a manager
      * - `_city` cannont be empty
-     * - `_price` must be greater than 0
      * - `_date` must be in the future
      * - `_maxPlayers` must be a multiple of two and greater than 0
      *
      * Emits a {TournamentCreated} event.
      *
      * @param _city city name of the new tournament 
-     * @param _price price to register at the tournament 
      * @param _date date of the new tournament
      * @param _diff the difficulty of the tournament
      * @param _maxPlayers maximum number of players
      */
-    function addTournament(string calldata _city, uint _price, uint _date, uint8 _diff, uint8 _maxPlayers) external;
+    function addTournament(string calldata _city, uint _date, uint8 _diff, uint8 _maxPlayers) external;
 
     /**
      * @dev Register a player to a tournament and pay the manager.
@@ -125,7 +122,7 @@ interface IPadelConnect {
      * @param _firstName first name of the player
      * @param _lastName last name of the player
      */
-    function registerPlayer(uint _id, string calldata _firstName, string calldata _lastName) payable external;
+    function registerPlayer(uint _id, string calldata _firstName, string calldata _lastName) external;
 
     /**
      * @dev Add the two winners of the tournament and call the mint function to send them a NFT reward.
@@ -156,6 +153,16 @@ interface IPadelConnect {
      * @param _message the message to add
      */
     function addComment(uint _id, string calldata _message) external;
+
+    /**
+     * @dev Follow the discussion of a tournament.
+     *
+     * Requirements:
+     * - `_id` must be less than the length of the array
+     * 
+     * @param _id id of the tournament followed by msg.sender
+     */
+    function followTournament(uint _id) external;
 
     /**
      * @dev Add comment to a manager of a tournament.

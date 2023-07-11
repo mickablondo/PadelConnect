@@ -53,7 +53,7 @@ flowchart >
 
 - [ ] Liste des commandes pour lancer le projet : Backend
 - [ ] Liste des commandes pour lancer le projet : Frontend
-- [ ] Commande pour lancer les TU + rapport à ajouter
+- [X] Commande pour lancer les TU + rapport à ajouter
 - [ ] Scripts de migration
 - [ ] Scripts personnels : ajout d'un manager et d'un tournoi / ajout de messages ...
 

@@ -16,7 +16,7 @@ import "./PadelConnectNFT.sol";
 contract PadelConnect is IPadelConnect, Ownable, PadelConnectNFT {
 
     /// @notice Map of a manager address to his description
-    mapping(address => Manager) private managers;
+    mapping(address => Manager) managers;
 
     /// @notice Map of a tournament id to a manager address
     mapping(uint => address) linkManagerTournament;
@@ -25,20 +25,20 @@ contract PadelConnect is IPadelConnect, Ownable, PadelConnectNFT {
     Tournament[] public tournaments;
 
     /// @notice Map of a player address to his description
-    mapping(address => Player) private players;
+    mapping(address => Player) players;
 
-    /// @notice Map of a player address to his following tournaments
-    mapping(address => Tournament) followingTournamentsByPlayers;
+    /// @notice Map of a tournament id to the addresses of his followers
+    mapping(uint => mapping(address => bool)) public followedTournaments;
 
     /// @notice Map of a tournamentId to the comments
-    mapping(uint => mapping(uint => Comment)) comments;
+    mapping(uint => mapping(uint => Comment)) public comments;
 
     /// @notice Map of a tournamentId to the commentId
     /// @dev Use it to know the number of comments by tournament
     mapping(uint => uint) idComments;
 
     /// @notice Map of a tournament to a map of a player address to the private comments
-    mapping(uint => mapping(address => Comment[])) private privateComments;
+    mapping(uint => mapping(address => Comment[])) privateComments; // TODO à revérifier
 
     /// @notice Map of an address to a timestamp
     mapping(address => uint) lastPostDate;
@@ -52,14 +52,11 @@ contract PadelConnect is IPadelConnect, Ownable, PadelConnectNFT {
     /// @notice Custom error when the registration phase is finished
     error RegistrationEnded();
 
-    /// @notice Custom error when the value send is not equals to price of the tournament
-    error WrongValueToPay();
-
     /**
      * @dev Sender must be a manager registered
      */
     modifier onlyManagers() {
-        require(managers[msg.sender].isRegistered, "Forbidden access");
+        require(managers[msg.sender].isRegistered, "Forbidden");
         _;
     }
 
@@ -86,7 +83,7 @@ contract PadelConnect is IPadelConnect, Ownable, PadelConnectNFT {
      * @param _field the string to be checked
      */
     modifier notEmptyString(string memory _field) {
-         require(bytes(_field).length > 0, "Field cannot be empty");
+         require(bytes(_field).length > 0, "Cannot be empty");
          _;
     }
 
@@ -95,7 +92,7 @@ contract PadelConnect is IPadelConnect, Ownable, PadelConnectNFT {
      * @param _address the address of the author
      */
     modifier waitUntilNewPost(address _address) {
-        require(lastPostDate[msg.sender] < block.timestamp - 10, "Wait 10s before new post");
+        require(lastPostDate[msg.sender] < block.timestamp - 10, "Wait 10s");
         _;
     }
 
@@ -115,10 +112,9 @@ contract PadelConnect is IPadelConnect, Ownable, PadelConnectNFT {
     /**
      * @dev See {IPadelConnect-addTournament}.
      */
-    function addTournament(string calldata _city, uint _price, uint _date, uint8 _diff,uint8 _maxPlayers) external onlyManagers notEmptyString(_city) {
-        require(_price > 0, "Mandatory price");
-        require(_date > block.timestamp, "Date must be in the future");
-        require(_maxPlayers > 0 && _maxPlayers % 2 == 0, "Padel is played by 2");
+    function addTournament(string calldata _city, uint _date, uint8 _diff,uint8 _maxPlayers) external onlyManagers notEmptyString(_city) {
+        require(_date > block.timestamp, "Incorrect date");
+        require(_maxPlayers > 0 && _maxPlayers % 2 == 0, "Played by 2");
 
         uint id = tournaments.length;
         address temp;
@@ -127,7 +123,6 @@ contract PadelConnect is IPadelConnect, Ownable, PadelConnectNFT {
             Tournament(
                 id,
                 _city,
-                _price,
                 _date,
                 getDifficultyFromUint(_diff),
                 _maxPlayers,
@@ -138,14 +133,13 @@ contract PadelConnect is IPadelConnect, Ownable, PadelConnectNFT {
         );
 
         linkManagerTournament[id] = msg.sender;
-
-        emit TournamentCreated(_city, _price, _date);
+        emit TournamentCreated(_city, _date);
     }
 
     /**
      * @dev See {IPadelConnect-registerPlayer}.
      */
-    function registerPlayer(uint _id, string calldata _firstName, string calldata _lastName) payable external shouldIdTournamentExists(_id) notEmptyString(_firstName) notEmptyString(_lastName) {
+    function registerPlayer(uint _id, string calldata _firstName, string calldata _lastName) external shouldIdTournamentExists(_id) notEmptyString(_firstName) notEmptyString(_lastName) {
         Tournament memory tournament = tournaments[_id];
 
         if(tournament.date < block.timestamp) {
@@ -154,15 +148,6 @@ contract PadelConnect is IPadelConnect, Ownable, PadelConnectNFT {
 
         if(tournament.registrationsAvailable == 0) {
             revert CompleteTournament();
-        }
-
-        if(msg.value != tournament.price) {
-            revert WrongValueToPay();
-        }
-
-        (bool sent, ) = address(linkManagerTournament[_id]).call{value: msg.value}("");
-        if(!sent) {
-            revert ErrorDuringPayment();
         }
 
         players[msg.sender] = Player(_lastName, _firstName);
@@ -175,7 +160,7 @@ contract PadelConnect is IPadelConnect, Ownable, PadelConnectNFT {
      * @dev See {IPadelConnect-addWinners}.
      */
     function addWinners(uint _id, address _winner1, address _winner2) external onlyOwner shouldIdTournamentExists(_id) notZeroAddress(_winner1) notZeroAddress(_winner2) {
-        require(_winner1 != _winner2, "Error : Same address for the two players.");
+        require(_winner1 != _winner2, "Same address");
 
         tournaments[_id].winner1 = _winner1;
         tournaments[_id].winner2 = _winner2;
@@ -201,13 +186,20 @@ contract PadelConnect is IPadelConnect, Ownable, PadelConnectNFT {
     }
 
     /**
+     * @dev See {IPadelConnect-shouldIdTournamentExists}.
+     */
+    function followTournament(uint _id) external shouldIdTournamentExists(_id) {
+        followedTournaments[_id][msg.sender] = true;
+    }
+
+    /**
      * @dev See {IPadelConnect-addPrivateCommentToManager}.
      */
     function addPrivateCommentToManager(uint _id, string calldata _message) external shouldIdTournamentExists(_id) notEmptyString(_message) waitUntilNewPost(msg.sender) {
         privateComments[_id][msg.sender].push(Comment(_message, msg.sender));
 
         lastPostDate[msg.sender] = block.timestamp;
-        emit PrivateCommentAdded(_id, msg.sender); // TODO : _author utile ??? oui pour remonter uniquement à l'auteur
+        emit PrivateCommentAdded(_id, msg.sender);
     }
 
     /**
@@ -217,7 +209,7 @@ contract PadelConnect is IPadelConnect, Ownable, PadelConnectNFT {
         privateComments[_id][_player].push(Comment(_message, msg.sender));
 
         lastPostDate[msg.sender] = block.timestamp;
-        emit PrivateResponseAdded(_id, _player); // TODO : _author utile ??? oui pour remonter uniquement à l'auteur
+        emit PrivateResponseAdded(_id, _player);
     }
 
     /// @notice Returns the difficulty value from the enum
