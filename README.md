@@ -95,7 +95,7 @@ Résultat :
       ✔ should return the difficulty p250
       ✔ should return the difficulty p1000
       ✔ should return the difficulty p2000
-      ✔ should return an unknown difficulty
+      ✔ should revert if the difficulty is unknown
     After registrering players
       Followers
         ✔ should adding a follower to a tournament
@@ -153,7 +153,7 @@ En version web via le fichier <i>./coverage/index.html</i> :
   
   
 > **Note**  
-Ajout de la librairie <i>@nomicfoundation/hardhat-network-helpers</i> pour manipuler la date de la blockchain.
+> Ajout de la librairie <i>@nomicfoundation/hardhat-network-helpers</i> pour manipuler la date de la blockchain.
 
 
 ```js

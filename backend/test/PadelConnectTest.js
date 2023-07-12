@@ -156,10 +156,11 @@ describe("Test PadelConnect", function() {
             expect(tournament.difficulty).to.be.equal(new BN(5));
         });
 
-        it('should return an unknown difficulty', async function() {
-            await pcContract.connect(manager).addTournament('rouen', 2067697299, 7, 16);
-            let tournament = await pcContract.tournaments(0);
-            expect(tournament.difficulty).to.be.equal(new BN(6));
+        it('should revert if the difficulty is unknown', async function() {
+            await expectRevert(
+                pcContract.connect(manager).addTournament('rouen', 2067697299, 7, 16),
+                "Incorrect difficulty"
+            );
         });
     });
 
