@@ -54,8 +54,6 @@ contract PadelConnect is IPadelConnect, Ownable, PadelConnectNFT {
     /// @notice Custom error when the registration phase is finished
     error RegistrationEnded();
 
-    uint constant NB_COMMENTS = 10;
-
     /**
      * @dev Sender must be a manager registered
      */
