@@ -6,6 +6,7 @@ import "./IPadelConnect.sol";
 import "./PadelConnectNFT.sol";
 
 // TODO revoir visibilité
+// TODO nom prénom utiles ??? (surtout pour le manager)
 
 /// @title Padel tournament management contract
 /// @notice This contract makes it possible to manage padel tournaments and to connect the different users.
