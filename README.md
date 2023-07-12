@@ -52,6 +52,7 @@ flowchart >
 ## Instructions d'installation
 
 - [ ] Liste des commandes pour lancer le projet : Backend
+- [ ] Section NFT
 - [ ] Liste des commandes pour lancer le projet : Frontend
 - [X] Commande pour lancer les TU + rapport à ajouter
 - [ ] Scripts de migration
