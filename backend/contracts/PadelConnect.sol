@@ -6,7 +6,8 @@ import "./IPadelConnect.sol";
 import "./PadelConnectNFT.sol";
 
 // TODO revoir visibilité
-// TODO nom prénom utiles ??? (surtout pour le manager)
+// TODO nom prénom manager utiles ???
+// TODO mapping(uint => Tournament) : mieux que array, non ?
 
 /// @title Padel tournament management contract
 /// @notice This contract makes it possible to manage padel tournaments and to connect the different users.
@@ -36,7 +37,7 @@ contract PadelConnect is IPadelConnect, Ownable, PadelConnectNFT {
 
     /// @notice Map of a tournamentId to the max commentId
     /// @dev Use it to know the number of comments by tournament
-    mapping(uint => uint) idComments;
+    mapping(uint => uint) public idComments;
 
     /// @notice Map of a tournament to a map of a player address to the private comments
     mapping(uint => mapping(address => Comment[])) privateComments; // TODO à revérifier
@@ -52,6 +53,8 @@ contract PadelConnect is IPadelConnect, Ownable, PadelConnectNFT {
 
     /// @notice Custom error when the registration phase is finished
     error RegistrationEnded();
+
+    uint constant NB_COMMENTS = 10;
 
     /**
      * @dev Sender must be a manager registered
@@ -116,6 +119,7 @@ contract PadelConnect is IPadelConnect, Ownable, PadelConnectNFT {
     function addTournament(string calldata _city, uint _date, uint8 _diff,uint8 _maxPlayers) external onlyManagers notEmptyString(_city) {
         require(_date > block.timestamp, "Incorrect date");
         require(_maxPlayers > 0 && _maxPlayers % 2 == 0, "Played by 2");
+        require(_diff < uint(type(Difficulty).max), "Incorrect difficulty");
 
         uint id = tournaments.length;
         address temp;
@@ -125,7 +129,7 @@ contract PadelConnect is IPadelConnect, Ownable, PadelConnectNFT {
                 id,
                 _city,
                 _date,
-                getDifficultyFromUint(_diff),
+                Difficulty(_diff),
                 _maxPlayers,
                 _maxPlayers, // nombre de places disponibles = nombre de joueurs autorisés à la création du tournoi
                 temp,
@@ -211,18 +215,5 @@ contract PadelConnect is IPadelConnect, Ownable, PadelConnectNFT {
 
         lastPostDate[msg.sender] = block.timestamp;
         emit PrivateResponseAdded(_id, _player);
-    }
-
-    /// @notice Returns the difficulty value from the enum
-    /// @param _difficulty the difficulty in uint
-    /// @return the difficulty from the enum
-    function getDifficultyFromUint(uint _difficulty) private pure returns(Difficulty) {
-        if(_difficulty == 0) return Difficulty.p25; 
-        if(_difficulty == 1) return Difficulty.p100;
-        if(_difficulty == 2) return Difficulty.p250;
-        if(_difficulty == 3) return Difficulty.p500;
-        if(_difficulty == 4) return Difficulty.p1000;
-        if(_difficulty == 5) return Difficulty.p2000;
-        return Difficulty.UNKNOWN;
     }
 }
