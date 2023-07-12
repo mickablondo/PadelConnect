@@ -32,12 +32,9 @@ export const { chains, provider, webSocketProvider } = configureChains(
 );
 */
 
-const projectId = process.env.NEXT_WALLET_CONNECT_PROJECTID;
-console.log(projectId);
-
 const { connectors  } = getDefaultWallets({
   appName: 'Padel Connect',
-  projectId, //:'ea0cd859091151569ea66d64014c6434',// process.env.NEXT_WALLET_CONNECT_PROJECTID,
+  projectId:'ea0cd859091151569ea66d64014c6434',
   chains
 });
 
