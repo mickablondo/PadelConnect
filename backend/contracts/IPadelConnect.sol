@@ -13,8 +13,7 @@ interface IPadelConnect {
         p250,
         p500,
         p1000,
-        p2000,
-        UNKNOWN
+        p2000
     }
 
     /// @notice Description of a tournament
