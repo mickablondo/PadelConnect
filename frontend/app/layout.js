@@ -12,6 +12,7 @@ import {
   hardhat
 } from 'wagmi/chains';
 import { publicProvider } from 'wagmi/providers/public';
+import Layout from '@/components/Layout/Layout';
 
 const { chains, publicClient } = configureChains(
   [hardhat],
@@ -51,7 +52,9 @@ export default function RootLayout({ children }) {
         <WagmiConfig config={wagmiConfig}>
           <RainbowKitProvider chains={chains}>
             <ChakraProvider>
-              {children}
+              <Layout>
+                {children}
+              </Layout>
             </ChakraProvider>
           </RainbowKitProvider>
         </WagmiConfig>

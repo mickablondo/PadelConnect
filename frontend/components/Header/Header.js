@@ -1,7 +1,9 @@
 "use client"
-import { Flex, Center, Menu, MenuButton, MenuItem, MenuList, IconButton, Image, Heading, Highlight } from '@chakra-ui/react';
+import { Flex, Center, Menu, MenuButton, MenuItem, MenuList, Icon, IconButton, Image, Heading, Highlight } from '@chakra-ui/react';
 import { HamburgerIcon, PlusSquareIcon, SettingsIcon } from '@chakra-ui/icons';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
+import { MdHome } from 'react-icons/md';
+import NextLink  from 'next/link';
 
 const Header = () => {
   return (
@@ -18,12 +20,21 @@ const Header = () => {
             variant='outline'
           />
           <MenuList>
-            <MenuItem icon={<SettingsIcon />} onClick={() => alert("add_manager")}>
-              Ajouter un responsable de tournoi
-            </MenuItem>
-            <MenuItem icon={<PlusSquareIcon />} onClick={() => alert("add_tournament")}>
-              Ajouter un tournoi
-            </MenuItem>
+            <NextLink href={'/'}>
+              <MenuItem icon={<Icon as={MdHome}/>}>
+                Accueil
+              </MenuItem>
+            </NextLink>
+            <NextLink href={'/admin'}>
+              <MenuItem icon={<SettingsIcon />}>
+                Ajouter un responsable de tournoi
+              </MenuItem>
+            </NextLink>
+            <NextLink href={'/manager'}>
+              <MenuItem icon={<PlusSquareIcon />}>
+                Ajouter un tournoi
+              </MenuItem>
+            </NextLink>
           </MenuList>
         </Menu>
         <Flex>
