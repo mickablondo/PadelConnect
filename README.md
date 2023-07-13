@@ -37,10 +37,10 @@ flowchart >
     B -.->|add manager| I((Smart Contract - Forum))
     C -.->|add tournament| I
     D -.->|get infos tournament| I
-    E -.->|register player in tournament<br/>pay the manager| I
+    E -.->|register in tournament| I
     E -.->|add winners| I
     F -.->|add comment| I
-    G -.->|add private comment| I
+    G -.->|add comment to manager| I
     I -.->|mint for the winners| J((Smart Contract - NFT))
     I -.->|events tournaments/comments| A
 ```
