@@ -6,8 +6,8 @@ import "./IPadelConnect.sol";
 import "./PadelConnectNFT.sol";
 
 // TODO revoir visibilité
-// TODO nom prénom manager utiles ???
 // TODO mapping(uint => Tournament) : mieux que array, non ?
+// TODO comparer registerPlayer avec require ou avec revert
 
 /// @title Padel tournament management contract
 /// @notice This contract makes it possible to manage padel tournaments and to connect the different users.
@@ -18,7 +18,7 @@ import "./PadelConnectNFT.sol";
 contract PadelConnect is IPadelConnect, Ownable, PadelConnectNFT {
 
     /// @notice Map of a manager address to his description
-    mapping(address => Manager) managers;
+    mapping(address => bool) managers;
 
     /// @notice Map of a tournament id to a manager address
     mapping(uint => address) linkManagerTournament;
@@ -28,6 +28,9 @@ contract PadelConnect is IPadelConnect, Ownable, PadelConnectNFT {
 
     /// @notice Map of a player address to his description
     mapping(address => Player) players;
+
+    /// @notice Map of a tournament id to the players registered
+    mapping(uint => mapping(address => bool)) public playersRegistered;
 
     /// @notice Map of a tournament id to the addresses of his followers
     mapping(uint => mapping(address => bool)) public followedTournaments;
@@ -58,7 +61,7 @@ contract PadelConnect is IPadelConnect, Ownable, PadelConnectNFT {
      * @dev Sender must be a manager registered
      */
     modifier onlyManagers() {
-        require(managers[msg.sender].isRegistered, "Forbidden");
+        require(managers[msg.sender], "Forbidden");
         _;
     }
 
@@ -101,13 +104,9 @@ contract PadelConnect is IPadelConnect, Ownable, PadelConnectNFT {
     /**
      * @dev See {IPadelConnect-addManager}.
      */
-    function addManager(address _address, string calldata _firstName, string calldata _lastName) external onlyOwner notZeroAddress(_address) notEmptyString(_firstName) notEmptyString(_lastName) {
-        require(!managers[_address].isRegistered, "Already registered");
-
-        managers[_address].lastName = _lastName;
-        managers[_address].firstName = _firstName;
-        managers[_address].isRegistered = true;
-
+    function addManager(address _address) external onlyOwner notZeroAddress(_address) {
+        require(!managers[_address], "Already registered");
+        managers[_address] = true;
         emit ManagerAdded(_address);
     }
 
@@ -143,6 +142,7 @@ contract PadelConnect is IPadelConnect, Ownable, PadelConnectNFT {
      * @dev See {IPadelConnect-registerPlayer}.
      */
     function registerPlayer(uint _id, string calldata _firstName, string calldata _lastName) external shouldIdTournamentExists(_id) notEmptyString(_firstName) notEmptyString(_lastName) {
+        require(!playersRegistered[_id][msg.sender], "Already registered");
         Tournament memory tournament = tournaments[_id];
 
         if(tournament.date < block.timestamp) {
@@ -154,6 +154,7 @@ contract PadelConnect is IPadelConnect, Ownable, PadelConnectNFT {
         }
 
         players[msg.sender] = Player(_lastName, _firstName);
+        playersRegistered[_id][msg.sender] = true;
 
         --tournament.registrationsAvailable;
         tournaments[_id].registrationsAvailable = tournament.registrationsAvailable;
@@ -164,6 +165,7 @@ contract PadelConnect is IPadelConnect, Ownable, PadelConnectNFT {
      */
     function addWinners(uint _id, address _winner1, address _winner2) external onlyOwner shouldIdTournamentExists(_id) notZeroAddress(_winner1) notZeroAddress(_winner2) {
         require(_winner1 != _winner2, "Same address");
+        require(playersRegistered[_id][_winner1] && playersRegistered[_id][_winner2], "Not registered");
 
         tournaments[_id].winner1 = _winner1;
         tournaments[_id].winner2 = _winner2;
@@ -184,7 +186,6 @@ contract PadelConnect is IPadelConnect, Ownable, PadelConnectNFT {
         comments[_id][idComments[_id]] = Comment(_message, msg.sender);
         ++idComments[_id];
         lastPostDate[msg.sender] = block.timestamp;
-
         emit TournamentCommentAdded(_id);
     }
 
@@ -200,7 +201,6 @@ contract PadelConnect is IPadelConnect, Ownable, PadelConnectNFT {
      */
     function addPrivateCommentToManager(uint _id, string calldata _message) external shouldIdTournamentExists(_id) notEmptyString(_message) waitUntilNewPost(msg.sender) {
         privateComments[_id][msg.sender].push(Comment(_message, msg.sender));
-
         lastPostDate[msg.sender] = block.timestamp;
         emit PrivateCommentAdded(_id, msg.sender);
     }
@@ -210,7 +210,6 @@ contract PadelConnect is IPadelConnect, Ownable, PadelConnectNFT {
      */
     function addPrivateResponseToPlayer(uint _id, address _player, string calldata _message) external onlyManagers() shouldIdTournamentExists(_id) notZeroAddress(_player) notEmptyString(_message) waitUntilNewPost(msg.sender) {
         privateComments[_id][_player].push(Comment(_message, msg.sender));
-
         lastPostDate[msg.sender] = block.timestamp;
         emit PrivateResponseAdded(_id, _player);
     }
