@@ -28,13 +28,6 @@ interface IPadelConnect {
         address winner2;
     }
 
-    /// @notice Description of a manager
-    struct Manager {
-        string lastName;
-        string firstName;
-        bool isRegistered;
-    }
-
     /// @notice Description of a player
     struct Player {
         string lastName;
@@ -79,16 +72,12 @@ interface IPadelConnect {
      * - `msg.sender` can only be the owner
      * - `_address` cannont be the zero address
      * - `_address` cannot be ever registering
-     * - `_firstName` cannot be empty
-     * - `_lastName` cannot be empty
      *
      * Emits a {ManagerAdded} event.
      *
      * @param _address address of the new manager 
-     * @param _firstName first name of the new manager 
-     * @param _lastName last name of the new manager 
      */
-    function addManager(address _address, string calldata _firstName, string calldata _lastName) external;
+    function addManager(address _address) external;
 
     /**
      * @dev Add a new tournament.
