@@ -23,7 +23,7 @@ describe("Test PadelConnect", function() {
 
     describe("Adding managers", function() {
         it('should add a new manager', async function() {
-            await expect(pcContract.connect(owner).addManager(manager, 'john', 'doe'))
+            await expect(pcContract.connect(owner).addManager(manager))
                 .to.emit(
                     pcContract,
                     'ManagerAdded'
@@ -34,36 +34,22 @@ describe("Test PadelConnect", function() {
 
         it('should revert when caller is not the owner', async function() {
             await expectRevert(
-                pcContract.connect(manager).addManager(manager, 'john', 'doe'),
+                pcContract.connect(manager).addManager(manager),
                 "Ownable: caller is not the owner"
             );
         });
 
         it('should revert when the manager address is the zero address', async function() {
             await expectRevert(
-                pcContract.connect(owner).addManager(ZERO_ADDRESS, 'john', 'doe'),
+                pcContract.connect(owner).addManager(ZERO_ADDRESS),
                 "Cannot be the zero address"
             );
         });
 
-        it('should revert when the first name is empty', async function() {
-            await expectRevert(
-                pcContract.connect(owner).addManager(manager, '', 'doe'),
-                "Cannot be empty"
-            );
-        });
-
-        it('should revert when the last name is empty', async function() {
-            await expectRevert(
-                pcContract.connect(owner).addManager(manager, 'john', ''),
-                "Cannot be empty"
-            );
-        });
-
         it('should revert when the address was ever registered', async function() {
-            await pcContract.connect(owner).addManager(manager, 'john', 'doe');
+            await pcContract.connect(owner).addManager(manager);
             await expectRevert(
-                pcContract.connect(owner).addManager(manager, 'john', 'doe'),
+                pcContract.connect(owner).addManager(manager),
                 "Already registered"
             );
         });
@@ -71,7 +57,7 @@ describe("Test PadelConnect", function() {
 
     describe("Adding tournaments", function() {
         beforeEach(async function() {
-            await pcContract.connect(owner).addManager(manager, 'john', 'doe');
+            await pcContract.connect(owner).addManager(manager);
         });
 
         it('should add a new tournament', async function() {
@@ -166,7 +152,7 @@ describe("Test PadelConnect", function() {
 
     describe("After registrering players", function() {
         beforeEach(async function() {
-            await pcContract.connect(owner).addManager(manager, 'john', 'doe');
+            await pcContract.connect(owner).addManager(manager);
             await pcContract.connect(manager).addTournament('rouen', 2067697299, 3, 16);
             await pcContract.connect(player1).registerPlayer(0, 'roger', 'federer');
             await pcContract.connect(player2).registerPlayer(0, 'rafael', 'nadal');
@@ -209,24 +195,31 @@ describe("Test PadelConnect", function() {
                 );
             });
 
-            it('should add the winners', async function() {
+            it('should revert if id does not exist', async function() {
                 await expectRevert(
                     pcContract.connect(owner).addWinners(12, player1, player1),
                     "Wrong id sent"
                 );
             });
 
-            it('should add the winners', async function() {
+            it('should revert if winner1 is the 0 address', async function() {
                 await expectRevert(
                     pcContract.connect(owner).addWinners(0, ZERO_ADDRESS, player2),
                     "Cannot be the zero address"
                 );
             });
 
-            it('should add the winners', async function() {
+            it('should revert if winner2 is the 0 address', async function() {
                 await expectRevert(
                     pcContract.connect(owner).addWinners(0, player1, ZERO_ADDRESS),
                     "Cannot be the zero address"
+                );
+            });
+
+            it('should revert if a winner has been not registered', async function() {
+                await expectRevert(
+                    pcContract.connect(owner).addWinners(0, player1, player3),
+                    "Not registered"
                 );
             });
         });
@@ -352,7 +345,7 @@ describe("Test PadelConnect", function() {
 
     describe("Registering players", function() {
         beforeEach(async function() {
-            await pcContract.connect(owner).addManager(manager, 'john', 'doe');
+            await pcContract.connect(owner).addManager(manager);
             await pcContract.connect(manager).addTournament('rouen', 2067697299, 3, 16);
             await pcContract.connect(manager).addTournament('caen', 2067697299, 1, 2);
         });
@@ -383,6 +376,14 @@ describe("Test PadelConnect", function() {
             await expectRevert(
                 pcContract.connect(player1).registerPlayer(0, 'roger', ''),
                 "Cannot be empty"
+            );
+        });
+
+        it('should revert when the player is already registered', async function() {
+            pcContract.connect(player1).registerPlayer(0, 'roger', 'federer');
+            await expectRevert(
+                pcContract.connect(player1).registerPlayer(0, 'roger', 'federer'),
+                "Already registered"
             );
         });
 

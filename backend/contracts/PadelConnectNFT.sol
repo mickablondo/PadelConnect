@@ -3,12 +3,11 @@ pragma solidity 0.8.20;
  
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
 
 /// @title PadelConnect - NFT
 /// @dev This contract mints a NFT to the winners of a tournament.
 /// @author Mickael Blondeau
-contract PadelConnectNFT is ERC721URIStorage, Ownable {
+contract PadelConnectNFT is ERC721URIStorage {
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIds;
 
@@ -40,7 +39,7 @@ contract PadelConnectNFT is ERC721URIStorage, Ownable {
         string memory _city,
         string memory _firstName,
         string memory _lastName
-    ) internal onlyOwner() {
+    ) internal {
         _tokenIds.increment();
         uint256 newItemId = _tokenIds.current();
         rewards[newItemId] = Reward(_tournamentId, _city, _firstName, _lastName);

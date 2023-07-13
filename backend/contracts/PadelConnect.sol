@@ -116,7 +116,7 @@ contract PadelConnect is IPadelConnect, Ownable, PadelConnectNFT {
     function addTournament(string calldata _city, uint _date, uint8 _diff,uint8 _maxPlayers) external onlyManagers notEmptyString(_city) {
         require(_date > block.timestamp, "Incorrect date");
         require(_maxPlayers > 0 && _maxPlayers % 2 == 0, "Played by 2");
-        require(_diff < uint(type(Difficulty).max), "Incorrect difficulty");
+        require(_diff <= uint(type(Difficulty).max), "Incorrect difficulty");
 
         uint id = tournaments.length;
         address temp;
