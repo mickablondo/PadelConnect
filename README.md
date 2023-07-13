@@ -82,8 +82,6 @@ Résultat :
       ✔ should add a new manager
       ✔ should revert when caller is not the owner
       ✔ should revert when the manager address is the zero address
-      ✔ should revert when the first name is empty
-      ✔ should revert when the last name is empty
       ✔ should revert when the address was ever registered
     Adding tournaments
       ✔ should add a new tournament
@@ -106,9 +104,10 @@ Résultat :
         ✔ should add the winners
         ✔ should revert when caller is not the owner
         ✔ should revert if the two winners are the same person
-        ✔ should add the winners
-        ✔ should add the winners
-        ✔ should add the winners
+        ✔ should revert if id does not exist
+        ✔ should revert if winner1 is the 0 address
+        ✔ should revert if winner2 is the 0 address
+        ✔ should revert if a winner has been not registered
       Forum
         ✔ should add a new commment
         ✔ should revert if id does not exist
@@ -131,6 +130,7 @@ Résultat :
       ✔ should revert if the id does not exist
       ✔ should revert when the first name is empty
       ✔ should revert when the last name is empty
+      ✔ should revert when the player is already registered
       ✔ should revert when the tournament is complete
       ✔ should revert when tournament is already started
 
