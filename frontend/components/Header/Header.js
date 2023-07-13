@@ -44,14 +44,14 @@ const Header = () => {
               src='padel.png'
             />
             <Center>
-            <Heading lineHeight='tall'>
-              <Highlight
-                query='- Padel Connect -'
-                styles={{ px: '2', py: '1', rounded: 'full', bg: 'green.100' }}
-              >
-                - Padel Connect -
-              </Highlight>
-            </Heading>
+              <Heading lineHeight='tall'>
+                <Highlight
+                  query='- Padel Connect -'
+                  styles={{ px: '2', py: '1', rounded: 'full', bg: 'green.100' }}
+                >
+                  - Padel Connect -
+                </Highlight>
+              </Heading>
             </Center>
             <Image
               boxSize='60px'
