@@ -1,10 +1,8 @@
 "use client"
 import styles from './page.module.css'
 
-import { Flex, useToast } from '@chakra-ui/react'
+import { Flex, useToast, Card, CardBody } from '@chakra-ui/react'
 import { useState } from 'react'
-
-import { v4 as uuidv4 } from 'uuid'
 
 // WAGMI & VIEM
 import { createPublicClient, http, parseAbiItem  } from 'viem'
@@ -12,6 +10,7 @@ import { hardhat } from 'viem/chains'
 import { useAccount } from 'wagmi'
 
 import NotConnected from '@/components/NotConnected/NotConnected'
+import Link from 'next/link'
 
 export default function Home() {
 
@@ -37,7 +36,14 @@ export default function Home() {
       flexWrap="wrap"
     >
       {isConnected ? (
-        <span>Tu es connecté : {address}</span>
+        <Flex>
+          <span>Tu es connecté : {address}</span>
+          <Card>
+          <CardBody>
+            <Link href="/tournament/1">Tournoi de Rouen</Link>
+          </CardBody>
+          </Card>
+        </Flex>
       ) : (
         <NotConnected />
       )}
