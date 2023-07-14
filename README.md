@@ -18,11 +18,11 @@ PadelConnect est une application décentralisée de gestion de tournois de Padel
 - [ ] web site deployed : 
 - [ ] contract url
 - [ ] Board of issues
-- [ ] Lien ipfs ou autre pour le NFT !?
+- [ ] Lien ipfs pour le NFT
 
 ### Stack technique
 
-- [ ] Lister sous forme de badges les technos utilisées : React / Nextjs / Wagmi / Viem /Solidity / Git / Chakra-ui / Rainbow Kit / EtherJs (?) / Hardhat (?) / chai (?) / TU (?)
+- [ ] Lister sous forme de badges les technos utilisées : React / Nextjs / Wagmi / Viem /Solidity / Git / Chakra-ui / Rainbow Kit / EtherJs / Hardhat / chaijd
 
 ## Schéma des interactions
 Le schéma ci-dessous montrent les interactions entre le frontend et les smart contracts :  
@@ -47,11 +47,6 @@ flowchart >
 ```
 ![image](https://github.com/mickablondo/PadelConnect/assets/36310658/2214d57d-b78b-4f01-93a0-ccec16eb74e1)
 
-
-## Description des fonctionnalités
-
-- [ ] Résumé des éléments fonctionnels du projet.
-
 ## Instructions d'installation
 
 - [ ] Liste des commandes pour lancer le projet : Backend
@@ -63,6 +58,7 @@ flowchart >
 
 ### Backend
 ### Frontend
+### Jeux de données 
 ### Tests unitaires
 Exécuter un noeud Hardhat : 
 ```bash
