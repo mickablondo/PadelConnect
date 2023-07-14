@@ -22,6 +22,8 @@ export default function Home() {
     transport: http(),
   })
 
+  // DATE : console.log(new Date(dateInSecs * 1000));
+
   const [events, setEvents] = useState([])
   const { isConnected, address } = useAccount()
 
@@ -49,7 +51,8 @@ export default function Home() {
               </CardHeader>
               <CardBody>
                 <Text>Niveau : P100<br/>
-                    Date : 01/08/2023</Text>
+                    Date : 01/08/2023<br/>
+                    Places restantes : 5</Text>
               </CardBody>
               <CardFooter>
                 <Link href="/tournament/1">
@@ -63,7 +66,8 @@ export default function Home() {
               </CardHeader>
               <CardBody>
                 <Text>Niveau : P50<br/>
-                    Date : 01/08/2023</Text>
+                    Date : 01/08/2023<br/>
+                    Places restantes : 5</Text>
               </CardBody>
               <CardFooter>
                 <Link href="/tournament/2">
@@ -77,7 +81,8 @@ export default function Home() {
               </CardHeader>
               <CardBody>
                 <Text>Niveau : P50<br/>
-                    Date : 01/08/2023</Text>
+                    Date : 01/08/2023<br/>
+                    Places restantes : 5</Text>
               </CardBody>
               <CardFooter>
               <Link href="/tournament/3">
@@ -91,7 +96,8 @@ export default function Home() {
               </CardHeader>
               <CardBody>
                 <Text>Niveau : P50<br/>
-                    Date : 01/08/2023</Text>
+                    Date : 01/08/2023<br/>
+                    Places restantes : 5</Text>
               </CardBody>
               <CardFooter>
               <Link href="/tournament/4">
@@ -105,7 +111,8 @@ export default function Home() {
               </CardHeader>
               <CardBody>
                 <Text>Niveau : P50<br/>
-                    Date : 01/08/2023</Text>
+                    Date : 01/08/2023<br/>
+                    Places restantes : 5</Text>
               </CardBody>
               <CardFooter>
               <Link href="/tournament/5">
@@ -119,7 +126,8 @@ export default function Home() {
               </CardHeader>
               <CardBody>
                 <Text>Niveau : P50<br/>
-                    Date : 01/08/2023</Text>
+                    Date : 01/08/2023<br/>
+                    Places restantes : 5</Text>
               </CardBody>
               <CardFooter>
               <Link href="/tournament/6">
