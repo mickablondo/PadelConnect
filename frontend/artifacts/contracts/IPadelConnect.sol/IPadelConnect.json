@@ -72,14 +72,8 @@
       "inputs": [
         {
           "indexed": false,
-          "internalType": "string",
-          "name": "city",
-          "type": "string"
-        },
-        {
-          "indexed": false,
           "internalType": "uint256",
-          "name": "date",
+          "name": "id",
           "type": "uint256"
         }
       ],

@@ -133,7 +133,7 @@ contract PadelConnect is IPadelConnect, Ownable, PadelConnectNFT {
         );
 
         linkManagerTournament[id] = msg.sender;
-        emit TournamentCreated(_city, _date);
+        emit TournamentCreated(id);
     }
 
     /**

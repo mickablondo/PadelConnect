@@ -48,7 +48,7 @@ interface IPadelConnect {
     /**
      * @dev Emitted when manager adds a new tournament.
      */
-    event TournamentCreated(string city, uint date);
+    event TournamentCreated(uint id);
 
     /**
      * @dev Emitted when somebody adds a new comment on a tournament forum.

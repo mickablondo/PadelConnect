@@ -8,7 +8,7 @@ const NotConnected = () => {
         <Alert status='warning'>
           <AlertIcon />
           <AlertTitle>Please connect your Wallet.</AlertTitle>
-          <AlertDescription>Click on the 'connect wallet' button ath the top left of the page.</AlertDescription>
+          <AlertDescription>Click on the 'connect wallet' button a the top right of the page.</AlertDescription>
         </Alert>
       </AbsoluteCenter>
     </Box>
