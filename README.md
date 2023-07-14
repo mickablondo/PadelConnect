@@ -29,18 +29,19 @@ Le schéma ci-dessous montrent les interactions entre le frontend et les smart c
 ```mermaid
 flowchart >
     A[ /home] -->|If owner| B[ /admin]
-    A -->|If manager| C[ /manager]
-    A -->|Any user| D[ /tournament] 
+    A -->|If manager| C[ /tournament/add]
+    A -->|Any user| D[ /tournament/id]
+    A -->|If manager| H[ /messageboard]
     D -->|Any user| E[ /inscription]
-    D -->|Any user| F[ /forum]
-    D -->|Any user| G[ /pm]
+    D -->|Any user| G[ /ask]
     B -.->|add manager| I((Smart Contract - Forum))
     C -.->|add tournament| I
-    D -.->|get infos tournament| I
+    D -.->|get info tournament| I
     E -.->|register in tournament| I
-    E -.->|add winners| I
-    F -.->|add comment| I
+    D -.->|add winners| I
+    D -.->|add comment| I
     G -.->|add comment to manager| I
+    H -.->|respond to player| I
     I -.->|mint for the winners| J((Smart Contract - NFT))
     I -.->|events tournaments/comments| A
 ```
