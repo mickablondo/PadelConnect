@@ -7,7 +7,6 @@ import "./PadelConnectNFT.sol";
 
 // TODO revoir visibilité
 // TODO mapping(uint => Tournament) : mieux que array, non ?
-// TODO comparer registerPlayer avec require ou avec revert
 
 /// @title Padel tournament management contract
 /// @notice This contract makes it possible to manage padel tournaments and to connect the different users.

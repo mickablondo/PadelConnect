@@ -1,8 +1,8 @@
 "use client"
 import styles from './page.module.css'
 
-import { Flex, useToast, Card, CardBody } from '@chakra-ui/react'
-import { useState } from 'react'
+import { Flex, useToast, Card, CardBody, AbsoluteCenter, SimpleGrid, CardHeader, Text, Button, Heading, CardFooter } from '@chakra-ui/react'
+import { useState, useEffect } from 'react'
 
 // WAGMI & VIEM
 import { createPublicClient, http, parseAbiItem  } from 'viem'
@@ -11,6 +11,7 @@ import { useAccount } from 'wagmi'
 
 import NotConnected from '@/components/NotConnected/NotConnected'
 import Link from 'next/link'
+import Contract from '../artifacts/contracts/PadelConnect.sol/PadelConnect.json'
 
 export default function Home() {
 
@@ -22,11 +23,15 @@ export default function Home() {
   })
 
   const [events, setEvents] = useState([])
-
-  //ISCONNECTED
   const { isConnected, address } = useAccount()
 
-  const toast = useToast()
+  useEffect(() => {
+    async function fetchData() {
+      const blockNumber = await client.getBlockNumber();
+      console.log("blocknumber : ", blockNumber)
+    }
+    fetchData();
+  }, [address])
 
   return (
     <Flex 
@@ -36,14 +41,94 @@ export default function Home() {
       flexWrap="wrap"
     >
       {isConnected ? (
-        <Flex>
-          <span>Tu es connecté : {address}</span>
-          <Card>
-          <CardBody>
-            <Link href="/tournament/1">Tournoi de Rouen</Link>
-          </CardBody>
-          </Card>
-        </Flex>
+        <AbsoluteCenter>
+          <SimpleGrid columns={4} spacing={4}>
+            <Card>
+              <CardHeader>
+                <Heading size='md'>Tournoi de Rouen</Heading>
+              </CardHeader>
+              <CardBody>
+                <Text>Niveau : P100<br/>
+                    Date : 01/08/2023</Text>
+              </CardBody>
+              <CardFooter>
+                <Link href="/tournament/1">
+                  <Button>Aller à la fiche</Button>
+                </Link>
+                </CardFooter>
+            </Card>
+            <Card>
+              <CardHeader>
+                <Heading size='md'>Tournoi de Caen</Heading>
+              </CardHeader>
+              <CardBody>
+                <Text>Niveau : P50<br/>
+                    Date : 01/08/2023</Text>
+              </CardBody>
+              <CardFooter>
+                <Link href="/tournament/2">
+                  <Button>Aller à la fiche</Button>
+                </Link>
+              </CardFooter>
+            </Card>
+            <Card>
+              <CardHeader>
+                <Heading size='md'>Tournoi de Strasbourg</Heading>
+              </CardHeader>
+              <CardBody>
+                <Text>Niveau : P50<br/>
+                    Date : 01/08/2023</Text>
+              </CardBody>
+              <CardFooter>
+              <Link href="/tournament/3">
+                  <Button>Aller à la fiche</Button>
+                </Link>
+              </CardFooter>
+            </Card>
+            <Card>
+              <CardHeader>
+                <Heading size='md'>Tournoi de Paris</Heading>
+              </CardHeader>
+              <CardBody>
+                <Text>Niveau : P50<br/>
+                    Date : 01/08/2023</Text>
+              </CardBody>
+              <CardFooter>
+              <Link href="/tournament/4">
+                  <Button>Aller à la fiche</Button>
+                </Link>
+              </CardFooter>
+            </Card>
+            <Card>
+              <CardHeader>
+                <Heading size='md'>Tournoi de Nantes</Heading>
+              </CardHeader>
+              <CardBody>
+                <Text>Niveau : P50<br/>
+                    Date : 01/08/2023</Text>
+              </CardBody>
+              <CardFooter>
+              <Link href="/tournament/5">
+                  <Button>Aller à la fiche</Button>
+                </Link>
+              </CardFooter>
+            </Card>
+            <Card>
+              <CardHeader>
+                <Heading size='md'>Tournoi de Bordeaux</Heading>
+              </CardHeader>
+              <CardBody>
+                <Text>Niveau : P50<br/>
+                    Date : 01/08/2023</Text>
+              </CardBody>
+              <CardFooter>
+              <Link href="/tournament/6">
+                  <Button>Aller à la fiche</Button>
+                </Link>
+              </CardFooter>
+            </Card>
+          </SimpleGrid>
+        </AbsoluteCenter>
       ) : (
         <NotConnected />
       )}
