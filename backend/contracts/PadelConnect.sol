@@ -17,7 +17,7 @@ import "./PadelConnectNFT.sol";
 contract PadelConnect is IPadelConnect, Ownable, PadelConnectNFT {
 
     /// @notice Map of a manager address to his description
-    mapping(address => bool) managers;
+    mapping(address => bool) public managers;
 
     /// @notice Map of a tournament id to a manager address
     mapping(uint => address) linkManagerTournament;
