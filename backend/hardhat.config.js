@@ -16,4 +16,7 @@ module.exports = {
       }
     ]
   },
+  paths: {
+    artifacts: '../frontend/artifacts',
+  },
 };
