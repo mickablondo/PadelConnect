@@ -118,7 +118,6 @@ contract PadelConnect is IPadelConnect, Ownable, PadelConnectNFT {
         require(_diff <= uint(type(Difficulty).max), "Incorrect difficulty");
 
         uint id = tournaments.length;
-        address temp;
 
         tournaments.push(
             Tournament(
@@ -128,8 +127,8 @@ contract PadelConnect is IPadelConnect, Ownable, PadelConnectNFT {
                 Difficulty(_diff),
                 _maxPlayers,
                 _maxPlayers, // nombre de places disponibles = nombre de joueurs autorisés à la création du tournoi
-                temp,
-                temp
+                address(0),
+                address(0)
             )
         );
 
