@@ -7,6 +7,7 @@ PadelConnect est une application décentralisée de gestion de tournois de Padel
 
 ### Liens
 
+- Maquettes réalisées sur [Balsamiq.cloud](https://balsamiq.cloud/somhp53/p5sdeh6)
 - [ ] web site deployed : 
 - [ ] contract url
 - [ ] Board of issues
