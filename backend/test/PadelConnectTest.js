@@ -173,50 +173,50 @@ describe("Test PadelConnect", function() {
 
         context("Adding winners", function() {
             it('should add the winners', async function() {
-                await pcContract.connect(owner).addWinners(0, player1, player2);
+                await pcContract.connect(manager).addWinners(0, player1, player2);
                 let tournament = await pcContract.tournaments(0);
                 expect(tournament.winner1).to.be.equal(player1.address);
                 expect(tournament.winner2).to.be.equal(player2.address);
             });
 
-            it('should revert when caller is not the owner', async function() {
+            it('should revert when caller is not the manager', async function() {
                 await expectRevert(
-                    pcContract.connect(manager).addWinners(0, player1, player2),
-                    "Ownable: caller is not the owner"
+                    pcContract.connect(owner).addWinners(0, player1, player2),
+                    "Forbidden"
                 );
             });
 
             it('should revert if the two winners are the same person', async function() {
                 await expectRevert(
-                    pcContract.connect(owner).addWinners(0, player1, player1),
+                    pcContract.connect(manager).addWinners(0, player1, player1),
                     "Same address"
                 );
             });
 
             it('should revert if id does not exist', async function() {
                 await expectRevert(
-                    pcContract.connect(owner).addWinners(12, player1, player1),
+                    pcContract.connect(manager).addWinners(12, player1, player1),
                     "Wrong id sent"
                 );
             });
 
             it('should revert if winner1 is the 0 address', async function() {
                 await expectRevert(
-                    pcContract.connect(owner).addWinners(0, ZERO_ADDRESS, player2),
+                    pcContract.connect(manager).addWinners(0, ZERO_ADDRESS, player2),
                     "Cannot be the zero address"
                 );
             });
 
             it('should revert if winner2 is the 0 address', async function() {
                 await expectRevert(
-                    pcContract.connect(owner).addWinners(0, player1, ZERO_ADDRESS),
+                    pcContract.connect(manager).addWinners(0, player1, ZERO_ADDRESS),
                     "Cannot be the zero address"
                 );
             });
 
             it('should revert if a winner has been not registered', async function() {
                 await expectRevert(
-                    pcContract.connect(owner).addWinners(0, player1, player3),
+                    pcContract.connect(manager).addWinners(0, player1, player3),
                     "Not registered"
                 );
             });
