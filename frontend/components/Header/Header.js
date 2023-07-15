@@ -4,8 +4,31 @@ import { HamburgerIcon, PlusSquareIcon, SettingsIcon, EmailIcon } from '@chakra-
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { MdHome } from 'react-icons/md';
 import NextLink  from 'next/link';
+import { useEffect, useState } from 'react';
+import { isManager, isOwner } from '../Utils/Role';
+
+// WAGMI
+import { useAccount } from 'wagmi'
 
 const Header = () => {
+
+  const { isConnected, address } = useAccount();
+  const [isOwnerValue, setIsOwnerValue] = useState(false);
+  const [isManagerValue, setIsManagerValue] = useState(false);
+
+  useEffect(() => {
+    async function getRole() {
+      if(isConnected) {
+        let data = await isManager(address);
+        setIsManagerValue(data);
+
+        data = await isOwner(address);
+        setIsOwnerValue(data);
+      }
+    }
+    getRole();
+  }, [address])
+
   return (
     <Flex
         justifyContent="space-between"
@@ -25,21 +48,27 @@ const Header = () => {
                 Accueil
               </MenuItem>
             </NextLink>
+            { isOwnerValue &&
             <NextLink href={'/admin'}>
               <MenuItem icon={<SettingsIcon />}>
                 Ajouter un responsable de tournoi
               </MenuItem>
             </NextLink>
-            <NextLink href={'/tournament/add'}>
-              <MenuItem icon={<PlusSquareIcon />}>
-                Ajouter un tournoi
-              </MenuItem>
-            </NextLink>
-            <NextLink href={'/messageboard'}>
-              <MenuItem icon={<EmailIcon />}>
-                Messagerie
-              </MenuItem>
-            </NextLink>
+            }
+            { isManagerValue && 
+            <>
+              <NextLink href={'/tournament/add'}>
+                <MenuItem icon={<PlusSquareIcon />}>
+                  Ajouter un tournoi
+                </MenuItem>
+              </NextLink>
+              <NextLink href={'/messageboard'}>
+                <MenuItem icon={<EmailIcon />}>
+                  Messagerie
+                </MenuItem>
+              </NextLink>
+            </>
+            }
           </MenuList>
         </Menu>
         <Flex>
