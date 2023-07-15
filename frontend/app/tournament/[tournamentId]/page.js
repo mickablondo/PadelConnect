@@ -3,7 +3,7 @@ import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { getTournamentInfos } from '@/components/Utils/Tournament';
 import { isManager } from '@/components/Utils/Role';
-import { Button, Checkbox, Flex, HStack, Heading, Input, SimpleGrid, Table, TableCaption, TableContainer, Tbody, Td, Text, Tr, useToast } from '@chakra-ui/react';
+import { Button, Card, Checkbox, Flex, HStack, Heading, Input, SimpleGrid, Table, TableCaption, TableContainer, Tbody, Td, Text, Tr, useToast } from '@chakra-ui/react';
 import NotConnected from '@/components/NotConnected/NotConnected';
 import { EnumDifficulty } from '@/components/Utils/EnumDifficulty';
 import Contract from '../../../artifacts/contracts/PadelConnect.sol/PadelConnect.json';
@@ -23,10 +23,72 @@ const Tournament = () => {
     const [winner1, setWinner1] = useState();
     const [winner2, setWinner2] = useState();
     const [isFollowing, setIsFollowing] = useState(false);
+    const [comments, setComments] = useState([]);
+    const [addingComment, setAddingComment] = useState();
     const toast = useToast();
 
     const contractAddress = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS;
     const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
+    const MAX_MESSAGES = 10;
+
+    const getMessages = async (id) => {
+        let data = await readContract({
+            address: contractAddress,
+            abi: Contract.abi,
+            functionName: "idComments",
+            args: [id],
+            account: address
+        });
+
+        let start_messages = 0;
+        if(parseInt(data) > MAX_MESSAGES) {
+            start_messages = (parseInt(data)-MAX_MESSAGES+1);
+        }
+
+        setComments([]);
+        for (let i = start_messages; i <= parseInt(data)-1; i++) {
+            let comment = await readContract({
+                address: contractAddress,
+                abi: Contract.abi,
+                functionName: "comments",
+                args: [id, i],
+                account: address
+            });
+            setComments(oldComments => [...oldComments, {
+                message: comment[0], author: comment[1]
+            }]);
+        }
+    }
+
+    const writeMessage = async () => {
+        try {
+            const { request } = await prepareWriteContract({
+                address: contractAddress,
+                abi: Contract.abi,
+                functionName: "addComment",
+                args: [params.tournamentId, addingComment]
+            });
+            await writeContract(request);
+
+            getMessages(params.tournamentId);
+
+            toast({
+                title: 'Message ajouté.',
+                description: "Le message a bien été ajouté.",
+                status: 'success',
+                duration: 4000,
+                isClosable: true,
+            })
+        } catch(err) {
+            toast({
+                title: 'Error.',
+                description: "Une erreur est survenue.",
+                status: 'error',
+                duration: 4000,
+                isClosable: true,
+            })
+        }
+    }
 
     const send = async () => {
         try {
@@ -62,6 +124,18 @@ const Tournament = () => {
         }
     }
 
+    const changeFollow = async (follow) => {
+        const { request } = await prepareWriteContract({
+            address: contractAddress,
+            abi: Contract.abi,
+            functionName: "followTournament",
+            args: [params.tournamentId, follow]
+        });
+        await writeContract(request);
+
+        setIsFollowing(follow);
+    }
+
     useEffect(() => {
         async function getInfos(id) {
             if(isConnected) {
@@ -86,6 +160,9 @@ const Tournament = () => {
                 });
                 if(followData) setIsFollowing(true);
                 else setIsFollowing(false);
+
+                // recherche des messages à afficher
+                await getMessages(id);
             }
         }
         getInfos(params.tournamentId);
@@ -107,53 +184,57 @@ const Tournament = () => {
                     width="100%"
                     height="95%"
                 >
-                    <TableContainer>
-                        <Table variant='striped' colorScheme='teal'>
-                            <TableCaption>
-                                <Checkbox size='md' colorScheme='green' isChecked={isFollowing}
-                                    onChange={(e) => changee.target.checked}
-                                >
-                                    Suivre le tournoi
-                                </Checkbox>
-                            </TableCaption>
-                            <Tbody>
-                                <Tr>
-                                    <Td>
-                                        <Text>Ville</Text>
-                                    </Td>
-                                    <Td>
-                                        {tournamentSelected !== undefined ? tournamentSelected.city : ""}
-                                    </Td>
-                                </Tr>
-                                <Tr>
-                                    <Td>
-                                        <Text>Date</Text>
-                                    </Td>
-                                    <Td>
-                                        {tournamentSelected !== undefined ? new Date(parseInt(tournamentSelected.date) * 1000).toLocaleDateString("fr") : ""}
-                                    </Td>
-                                </Tr>
-                                <Tr>
-                                    <Td>
-                                        <Text>Niveau</Text>
-                                    </Td>
-                                    <Td>
-                                        {tournamentSelected !== undefined ? EnumDifficulty[tournamentSelected.difficulty] : ""}
-                                    </Td>
-                                </Tr>
-                                <Tr>
-                                    <Td>
-                                        <Text>Nombre de places disponibles</Text>
-                                    </Td>
-                                    <Td>
-                                        {tournamentSelected !== undefined ? tournamentSelected.availables : ""}
-                                    </Td>
-                                </Tr>
-                            </Tbody>
-                        </Table>
-                    </TableContainer>
+                    <Flex width={isManagerValue ? "25%" : "35%" }>
+                        <Card variant='filled'>
+                            <TableContainer>
+                                <Table variant='simple'>
+                                    <TableCaption>
+                                        <Checkbox size='md' colorScheme='green' isChecked={isFollowing}
+                                            onChange={(e) => changeFollow(e.target.checked)}
+                                        >
+                                            Suivre le tournoi
+                                        </Checkbox>
+                                    </TableCaption>
+                                    <Tbody>
+                                        <Tr>
+                                            <Td>
+                                                <Text as='b'>Ville</Text>
+                                            </Td>
+                                            <Td>
+                                                {tournamentSelected !== undefined ? tournamentSelected.city : ""}
+                                            </Td>
+                                        </Tr>
+                                        <Tr>
+                                            <Td>
+                                                <Text as='b'>Date</Text>
+                                            </Td>
+                                            <Td>
+                                                {tournamentSelected !== undefined ? new Date(parseInt(tournamentSelected.date) * 1000).toLocaleDateString("fr") : ""}
+                                            </Td>
+                                        </Tr>
+                                        <Tr>
+                                            <Td>
+                                                <Text as='b'>Niveau</Text>
+                                            </Td>
+                                            <Td>
+                                                {tournamentSelected !== undefined ? EnumDifficulty[tournamentSelected.difficulty] : ""}
+                                            </Td>
+                                        </Tr>
+                                        <Tr>
+                                            <Td>
+                                                <Text as='b'>Nombre de places disponibles</Text>
+                                            </Td>
+                                            <Td>
+                                                {tournamentSelected !== undefined ? tournamentSelected.availables : ""}
+                                            </Td>
+                                        </Tr>
+                                    </Tbody>
+                                </Table>
+                            </TableContainer>
+                        </Card>
+                    </Flex>
                     {isManagerValue && tournamentSelected.winner1 == ZERO_ADDRESS ? (
-                        <Flex flexDirection='column'>
+                        <Flex flexDirection='column' width="20%">
                             <Heading>
                                 Ajouter les vainqueurs
                             </Heading>
@@ -169,7 +250,26 @@ const Tournament = () => {
                         isManagerValue && <Heading>Vainqueurs déjà renseignés</Heading>
                     )
                     }
-                    <Text>Le CHAT</Text>
+                    <Flex flexDirection='column' width={isManagerValue ? "35%" : "50%" }>
+                        <TableContainer>
+                            <Table variant='striped' colorScheme='teal' style={{borderCollapse:"separate", borderSpacing:"0 0.5em"}}>
+                                <Tbody>
+                                    {comments.map(commentToWrite =>(
+                                    <Tr>
+                                        <Td>
+                                                <Text>{commentToWrite.author} : </Text> 
+                                                <Text align='right'>{commentToWrite.message}</Text>
+                                        </Td>
+                                    </Tr>
+                                    ))}
+                                </Tbody>
+                            </Table>
+                        </TableContainer>
+                        <HStack spacing='24px'>
+                            <Input onChange={e => setAddingComment(e.target.value)} placeholder="Mon message ..." />
+                            <Button colorScheme='whatsapp' onClick={() => writeMessage()}>Envoyer</Button>
+                        </HStack>
+                    </Flex>
                 </Flex>
                 {tournamentSelected !== undefined && tournamentSelected.winner1 == ZERO_ADDRESS && 
                     <Flex
