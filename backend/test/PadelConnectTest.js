@@ -105,8 +105,7 @@ describe("Test PadelConnect", function() {
             expect(tournament.city).to.be.equal('rouen');
             expect(tournament.date).to.be.equal(new BN(2067697299));
             expect(tournament.difficulty).to.be.equal(new BN(3));
-            expect(tournament.maxPlayers).to.be.equal(new BN(16));
-            expect(tournament.registrationsAvailable).to.be.equal(tournament.maxPlayers);
+            expect(tournament.registrationsAvailable).to.be.equal(new BN(16));
             expect(tournament.winner1).to.be.equal(ZERO_ADDRESS);
             expect(tournament.winner2).to.be.equal(ZERO_ADDRESS);
         });

@@ -126,7 +126,6 @@ contract PadelConnect is IPadelConnect, Ownable, PadelConnectNFT {
                 _date,
                 Difficulty(_diff),
                 _maxPlayers,
-                _maxPlayers, // nombre de places disponibles = nombre de joueurs autorisés à la création du tournoi
                 address(0),
                 address(0)
             )

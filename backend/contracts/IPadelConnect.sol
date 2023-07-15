@@ -22,7 +22,6 @@ interface IPadelConnect {
         string city;
         uint date;
         Difficulty difficulty;
-        uint8 maxPlayers;
         uint8 registrationsAvailable;
         address winner1;
         address winner2;
