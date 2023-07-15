@@ -9,6 +9,7 @@ import { isManager, isOwner } from '../Utils/Role';
 
 // WAGMI
 import { useAccount } from 'wagmi'
+import Link from 'next/link';
 
 const Header = () => {
 
@@ -71,6 +72,7 @@ const Header = () => {
             }
           </MenuList>
         </Menu>
+        <Link href="/">
         <Flex>
             <Image
               boxSize='60px'
@@ -93,6 +95,7 @@ const Header = () => {
               src='/padel.png'
             />
         </Flex>
+        </Link>
         <ConnectButton />
     </Flex>
   )
