@@ -9,17 +9,14 @@ import { createPublicClient, http, parseAbiItem  } from 'viem'
 import { hardhat } from 'viem/chains'
 
 // WAGMI
-import { readContract } from '@wagmi/core'
 import { useAccount } from 'wagmi'
 
 import NotConnected from '@/components/NotConnected/NotConnected'
 import Link from 'next/link'
-import Contract from '../artifacts/contracts/PadelConnect.sol/PadelConnect.json'
-import { EnumDifficulty } from '@/components/EnumDifficulty'
+import { EnumDifficulty } from '@/components/Utils/EnumDifficulty'
+import { getTournamentInfos } from '@/components/Utils/Tournament'
 
 export default function Home() {
-  
-  const contractAddress = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS;
 
   const client = createPublicClient({
     chain: hardhat,
@@ -37,15 +34,9 @@ export default function Home() {
     const lastTournamentsId = tournamentsLogs.slice(-12); // récupération des 12 derniers tournois enregistrés
 
     lastTournamentsId.map(async log => {
-      const data = await readContract({
-        address: contractAddress,
-        abi: Contract.abi,
-        functionName: "tournaments",
-        args: [log.args.id],
-        account: address
-      });
+      const data = await getTournamentInfos(log.args.id, address);
       setTournaments(oldTournaments => [...oldTournaments, {
-        id: data[0], city: data[1], date: data[2], difficulty: data[3], availables: data[5]
+        id: data[0], city: data[1], date: data[2], difficulty: data[3], availables: data[4]
       }]);
     });
   }
