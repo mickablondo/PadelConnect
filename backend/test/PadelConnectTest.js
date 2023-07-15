@@ -66,8 +66,7 @@ describe("Test PadelConnect", function() {
                     pcContract,
                     'TournamentCreated'
                 ).withArgs(
-                    'rouen',
-                    2067697299
+                    0
                 );
         });
 
