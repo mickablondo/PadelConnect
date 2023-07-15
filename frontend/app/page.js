@@ -1,7 +1,7 @@
 "use client"
 import styles from './page.module.css'
 
-import { Flex, useToast, Card, CardBody, AbsoluteCenter, SimpleGrid, CardHeader, Text, Button, Heading, CardFooter } from '@chakra-ui/react'
+import { Flex, Card, CardBody, AbsoluteCenter, SimpleGrid, CardHeader, Text, Button, Heading, CardFooter } from '@chakra-ui/react'
 import { useState, useEffect } from 'react'
 
 // VIEM
@@ -9,7 +9,7 @@ import { createPublicClient, http, parseAbiItem  } from 'viem'
 import { hardhat } from 'viem/chains'
 
 // WAGMI
-import { prepareWriteContract, writeContract, readContract } from '@wagmi/core'
+import { readContract } from '@wagmi/core'
 import { useAccount } from 'wagmi'
 
 import NotConnected from '@/components/NotConnected/NotConnected'
