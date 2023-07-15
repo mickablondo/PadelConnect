@@ -5,6 +5,7 @@ async function main() {
 
     [owner, manager, player1] = await ethers.getSigners();
     const myContract = await ethers.getContractAt("PadelConnect", "0x5FbDB2315678afecb367f032d93F642f64180aa3");
+    const futureDate = 1694702274; // 14/09/2023
 
     // Adding a manager
     await myContract.connect(owner).addManager(manager);
@@ -34,11 +35,11 @@ async function main() {
     tournoi = await myContract.connect(manager).tournaments(3);
     console.log("Tournoi enregistré à", tournoi.city)
 
-    await myContract.connect(manager).addTournament('Nantes', dateInSecs, 4, 16);
+    await myContract.connect(manager).addTournament('Nantes', futureDate, 4, 16);
     tournoi = await myContract.connect(manager).tournaments(4);
     console.log("Tournoi enregistré à", tournoi.city)
 
-    await myContract.connect(manager).addTournament('Strasbourg', dateInSecs, 5, 16);
+    await myContract.connect(manager).addTournament('Strasbourg', futureDate, 5, 16);
     tournoi = await myContract.connect(manager).tournaments(5);
     console.log("Tournoi enregistré à", tournoi.city)
 

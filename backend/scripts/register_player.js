@@ -9,6 +9,10 @@ async function main() {
     // Registering players
     await myContract.connect(player1).registerPlayer(0, 'roger', 'federer');
     await myContract.connect(player2).registerPlayer(0, 'rafael', 'nadal');
+
+    // Adding comments
+    await myContract.connect(manager).addComment(0, 'Bienvenue sur le tournoi');
+    await myContract.connect(player2).addComment(0, 'Les matchs vont être serrés');
 }
 
 main()
