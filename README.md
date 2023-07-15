@@ -5,15 +5,6 @@ PadelConnect est une application décentralisée de gestion de tournois de Padel
 
 ## Description
 
-### Rôles
-| Rôle | Description |
-|----|----|
-| Owner | Le propriétaire est l'administrateur de l'application. |
-| Manager | Un <i>manager</i> est celui qui gère ses tournois. |
-| Player | Toute personne n'étant pas <i>manager</i> ni <i>owner</i> est un jouer. |  
-
-![image](https://github.com/mickablondo/PadelConnect/assets/36310658/1964eb71-1d91-4818-a37c-eef5154365f4)  
-
 ### Liens
 
 - [ ] web site deployed : 
@@ -24,6 +15,16 @@ PadelConnect est une application décentralisée de gestion de tournois de Padel
 ### Stack technique
 
 - [ ] Lister sous forme de badges les technos utilisées : React / Nextjs / Wagmi / Viem /Solidity / Git / Chakra-ui / Rainbow Kit / EtherJs / Hardhat / chaijd
+
+### Rôles
+| Rôle | Description |
+|----|----|
+| Owner | Le propriétaire est l'administrateur de l'application. |
+| Manager | Un <i>manager</i> est celui qui gère ses tournois. |
+| Player | Toute personne n'étant pas <i>manager</i> ni <i>owner</i> est un jouer. |  
+
+### Fonctionnalités
+![image](https://github.com/mickablondo/PadelConnect/assets/36310658/1964eb71-1d91-4818-a37c-eef5154365f4)  
 
 ## Schéma des interactions
 Le schéma ci-dessous montrent les interactions entre le frontend et les smart contracts :  
