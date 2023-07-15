@@ -1,5 +1,6 @@
 # PadelConnect
 
+![image](https://github.com/mickablondo/PadelConnect/assets/36310658/574ad835-ce6a-4435-b521-45b413e6379b)  
 PadelConnect est une application décentralisée de gestion de tournois de Padel permettant de créer une communauté autour de ce sport en proposant notamment un réseau social décentralisé.  
 
 ## Description
