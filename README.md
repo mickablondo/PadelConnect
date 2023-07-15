@@ -99,10 +99,11 @@ Résultat :
     After registrering players
       Followers
         ✔ should adding a follower to a tournament
+        ✔ should deleting a follower to a tournament
         ✔ should revert if id does not exist
       Adding winners
         ✔ should add the winners
-        ✔ should revert when caller is not the owner
+        ✔ should revert when caller is not the manager
         ✔ should revert if the two winners are the same person
         ✔ should revert if id does not exist
         ✔ should revert if winner1 is the 0 address
@@ -135,7 +136,7 @@ Résultat :
       ✔ should revert when tournament is already started
 
 
-  47 passing (2s)
+  48 passing (2s)
 
 ----------------------|----------|----------|----------|----------|----------------|
 File                  |  % Stmts | % Branch |  % Funcs |  % Lines |Uncovered Lines |
@@ -149,7 +150,7 @@ All files             |      100 |      100 |      100 |      100 |             
 ----------------------|----------|----------|----------|----------|----------------|
 ```
 
-En version web via le fichier <i>./coverage/index.html</i> :  
+En version web via le fichier <i>./coverage/contracts/index.html</i> :  
   
 ![image](https://github.com/mickablondo/PadelConnect/assets/36310658/43f9a92e-0d84-4969-8b00-6d874ce8b0be)
   

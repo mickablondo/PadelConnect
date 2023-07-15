@@ -189,8 +189,8 @@ contract PadelConnect is IPadelConnect, Ownable, PadelConnectNFT {
     /**
      * @dev See {IPadelConnect-shouldIdTournamentExists}.
      */
-    function followTournament(uint _id) external shouldIdTournamentExists(_id) {
-        followedTournaments[_id][msg.sender] = true;
+    function followTournament(uint _id, bool _follow) external shouldIdTournamentExists(_id) {
+        followedTournaments[_id][msg.sender] = _follow;
     }
 
     /**

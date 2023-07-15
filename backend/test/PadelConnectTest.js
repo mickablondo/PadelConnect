@@ -158,14 +158,21 @@ describe("Test PadelConnect", function() {
 
         context("Followers", function() {
             it('should adding a follower to a tournament', async function() {
-                await pcContract.connect(player1).followTournament(0);
+                await pcContract.connect(player1).followTournament(0, true);
                 let followIt = await pcContract.followedTournaments(0, player1);
                 expect(followIt).to.be.true;
+            });
+
+            it('should deleting a follower to a tournament', async function() {
+                await pcContract.connect(player1).followTournament(0, true);
+                await pcContract.connect(player1).followTournament(0, false);
+                let followIt = await pcContract.followedTournaments(0, player1);
+                expect(followIt).to.be.false;
             });
             
             it('should revert if id does not exist', async function() {
                 await expectRevert(
-                    pcContract.connect(player1).followTournament(112),
+                    pcContract.connect(player1).followTournament(112, true),
                     "Wrong id sent"
                 );
             });

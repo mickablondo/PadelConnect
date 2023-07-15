@@ -148,8 +148,9 @@ interface IPadelConnect {
      * - `_id` must be less than the length of the array
      * 
      * @param _id id of the tournament followed by msg.sender
+     * @param _follow true if msg.sender wants to follow, else false
      */
-    function followTournament(uint _id) external;
+    function followTournament(uint _id, bool _follow) external;
 
     /**
      * @dev Add comment to a manager of a tournament.

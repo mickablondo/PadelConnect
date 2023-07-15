@@ -3,7 +3,7 @@ import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { getTournamentInfos } from '@/components/Utils/Tournament';
 import { isManager } from '@/components/Utils/Role';
-import { Box, Button, Flex, HStack, Heading, Input, SimpleGrid, Table, TableCaption, TableContainer, Tbody, Td, Text, Tr, useToast } from '@chakra-ui/react';
+import { Button, Checkbox, Flex, HStack, Heading, Input, SimpleGrid, Table, TableCaption, TableContainer, Tbody, Td, Text, Tr, useToast } from '@chakra-ui/react';
 import NotConnected from '@/components/NotConnected/NotConnected';
 import { EnumDifficulty } from '@/components/Utils/EnumDifficulty';
 import Contract from '../../../artifacts/contracts/PadelConnect.sol/PadelConnect.json';
@@ -22,6 +22,7 @@ const Tournament = () => {
     const [tournamentSelected, setTournamentSelected] = useState();
     const [winner1, setWinner1] = useState();
     const [winner2, setWinner2] = useState();
+    const [isFollowing, setIsFollowing] = useState(false);
     const toast = useToast();
 
     const contractAddress = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS;
@@ -64,14 +65,27 @@ const Tournament = () => {
     useEffect(() => {
         async function getInfos(id) {
             if(isConnected) {
-              const data = await getTournamentInfos(id, address);
-              setTournamentSelected((prevState => ({
-                ...prevState,
-                id: data[0], city: data[1], date: data[2], difficulty: data[3], availables: data[4], winner1: data[5]
-              })));
+                // recherche des infos    
+                const data = await getTournamentInfos(id, address);
+                setTournamentSelected((prevState => ({
+                    ...prevState,
+                    id: data[0], city: data[1], date: data[2], difficulty: data[3], availables: data[4], winner1: data[5]
+                })));
 
-              const dataManager = await isManager(address);
-              setIsManagerValue(dataManager);
+                // recherche du rôle
+                const dataManager = await isManager(address);
+                setIsManagerValue(dataManager);
+
+                // recherche si l'utilisateur suit le tournoi
+                const followData = await readContract({
+                    address: contractAddress,
+                    abi: Contract.abi,
+                    functionName: "followedTournaments",
+                    args: [id, address],
+                    account: address
+                });
+                if(followData) setIsFollowing(true);
+                else setIsFollowing(false);
             }
         }
         getInfos(params.tournamentId);
@@ -95,7 +109,13 @@ const Tournament = () => {
                 >
                     <TableContainer>
                         <Table variant='striped' colorScheme='teal'>
-                            <TableCaption>Informations générales du tournoi</TableCaption>
+                            <TableCaption>
+                                <Checkbox size='md' colorScheme='green' isChecked={isFollowing}
+                                    onChange={(e) => changee.target.checked}
+                                >
+                                    Suivre le tournoi
+                                </Checkbox>
+                            </TableCaption>
                             <Tbody>
                                 <Tr>
                                     <Td>
