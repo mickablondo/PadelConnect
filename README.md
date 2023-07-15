@@ -152,7 +152,7 @@ All files             |      100 |      100 |      100 |      100 |             
 
 En version web via le fichier <i>./coverage/contracts/index.html</i> :  
   
-![image](https://github.com/mickablondo/PadelConnect/assets/36310658/43f9a92e-0d84-4969-8b00-6d874ce8b0be)
+![image](https://github.com/mickablondo/PadelConnect/assets/36310658/1a3f7c00-bfc8-4d3b-a4a4-87cd560cd755)
   
   
 > **Note**  
