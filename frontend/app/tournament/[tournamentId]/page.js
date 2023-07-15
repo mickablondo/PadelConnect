@@ -3,10 +3,11 @@ import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { getTournamentInfos } from '@/components/Utils/Tournament';
 import { isManager } from '@/components/Utils/Role';
-import { Button, Flex, Heading, Input, SimpleGrid, Table, TableCaption, TableContainer, Tbody, Td, Text, Tr, useToast } from '@chakra-ui/react';
+import { Box, Button, Flex, HStack, Heading, Input, SimpleGrid, Table, TableCaption, TableContainer, Tbody, Td, Text, Tr, useToast } from '@chakra-ui/react';
 import NotConnected from '@/components/NotConnected/NotConnected';
 import { EnumDifficulty } from '@/components/Utils/EnumDifficulty';
-import Contract from '../../../artifacts/contracts/PadelConnect.sol/PadelConnect.json'
+import Contract from '../../../artifacts/contracts/PadelConnect.sol/PadelConnect.json';
+import NextLink  from 'next/link';
 // WAGMI
 import { prepareWriteContract, writeContract, readContract } from '@wagmi/core'
 import { useAccount } from 'wagmi';
@@ -79,11 +80,18 @@ const Tournament = () => {
     return (
         <>
             {isConnected ? (
+                <Flex       
+                flexDirection='column'
+                alignItems="center"
+                p="2rem"
+                width="100%"
+                >
                 <Flex
                     justifyContent="space-between"
                     alignItems="center"
                     p="2rem"
                     width="100%"
+                    height="95%"
                 >
                     <TableContainer>
                         <Table variant='striped' colorScheme='teal'>
@@ -142,6 +150,25 @@ const Tournament = () => {
                     )
                     }
                     <Text>Le CHAT</Text>
+                </Flex>
+                {tournamentSelected !== undefined && tournamentSelected.winner1 == ZERO_ADDRESS && 
+                    <Flex
+                        p="2rem"
+                        justifyContent="right"
+                        alignItems="center"
+                        width="100%"
+                        height="5%"
+                    >
+                        <HStack spacing='24px'>
+                            <NextLink href={'/tournament/' + params.tournamentId + '/inscription'}>
+                                <Button colorScheme='telegram'>S'inscrire</Button>
+                            </NextLink>
+                            <NextLink href={'/tournament/' + params.tournamentId + '/ask'}>
+                                <Button colorScheme='telegram'>Contacter le responsable du tournoi</Button>
+                            </NextLink>
+                        </HStack>
+                    </Flex>
+                }
                 </Flex>
             ) : (
                 <NotConnected />
