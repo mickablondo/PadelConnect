@@ -1,7 +1,8 @@
 "use client"
 import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { getTournamentInfos } from '@/components/Utils/Tournament';
+import { v4 as uuidv4 } from 'uuid';
+import { getTournamentInfos, getManager } from '@/components/Utils/Tournament';
 import { isManager } from '@/components/Utils/Role';
 import { Button, Card, Checkbox, Flex, HStack, Heading, Input, SimpleGrid, Table, TableCaption, TableContainer, Tbody, Td, Text, Tr, useToast } from '@chakra-ui/react';
 import NotConnected from '@/components/NotConnected/NotConnected';
@@ -22,6 +23,7 @@ const Tournament = () => {
     const [tournamentSelected, setTournamentSelected] = useState();
     const [winner1, setWinner1] = useState();
     const [winner2, setWinner2] = useState();
+    const [managerAddress, setManagerAddress] = useState();
     const [isFollowing, setIsFollowing] = useState(false);
     const [comments, setComments] = useState([]);
     const [addingComment, setAddingComment] = useState();
@@ -71,6 +73,7 @@ const Tournament = () => {
             await writeContract(request);
 
             getMessages(params.tournamentId);
+            setAddingComment('');
 
             toast({
                 title: 'Message ajouté.',
@@ -80,9 +83,11 @@ const Tournament = () => {
                 isClosable: true,
             })
         } catch(err) {
+            let description = 'Une erreur est survenue.';
+            if(err.details.includes('Wait')) description = "Merci d'attendre avant de poster un message à nouveau.";
             toast({
                 title: 'Error.',
-                description: "Une erreur est survenue.",
+                description: description,
                 status: 'error',
                 duration: 4000,
                 isClosable: true,
@@ -163,6 +168,10 @@ const Tournament = () => {
 
                 // recherche des messages à afficher
                 await getMessages(id);
+
+                // recherche le manager du tournoi
+                const managerAddressFromBc = await getManager(id, address);
+                setManagerAddress(managerAddressFromBc);
             }
         }
         getInfos(params.tournamentId);
@@ -255,9 +264,9 @@ const Tournament = () => {
                             <Table variant='striped' colorScheme='teal' style={{borderCollapse:"separate", borderSpacing:"0 0.5em"}}>
                                 <Tbody>
                                     {comments.map(commentToWrite =>(
-                                    <Tr>
+                                    <Tr key={uuidv4()}>
                                         <Td>
-                                                <Text>{commentToWrite.author} : </Text> 
+                                                <Text>{commentToWrite.author} {managerAddress === commentToWrite.author && '(responsable)'} : </Text> 
                                                 <Text align='right'>{commentToWrite.message}</Text>
                                         </Td>
                                     </Tr>
@@ -266,7 +275,7 @@ const Tournament = () => {
                             </Table>
                         </TableContainer>
                         <HStack spacing='24px'>
-                            <Input onChange={e => setAddingComment(e.target.value)} placeholder="Mon message ..." />
+                            <Input value={addingComment} onChange={e => setAddingComment(e.target.value)} placeholder="Mon message ..." />
                             <Button colorScheme='whatsapp' onClick={() => writeMessage()}>Envoyer</Button>
                         </HStack>
                     </Flex>

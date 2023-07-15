@@ -20,7 +20,7 @@ contract PadelConnect is IPadelConnect, Ownable, PadelConnectNFT {
     mapping(address => bool) public managers;
 
     /// @notice Map of a tournament id to a manager address
-    mapping(uint => address) linkManagerTournament;
+    mapping(uint => address) public linkManagerTournament;
 
     /// @notice Array of the tournaments
     Tournament[] public tournaments;
