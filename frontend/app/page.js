@@ -1,12 +1,9 @@
 "use client"
 import styles from './page.module.css'
-
+import { Client } from '@/components/Utils/Client'
 import { Flex, Card, CardBody, AbsoluteCenter, SimpleGrid, CardHeader, Text, Button, Heading, CardFooter } from '@chakra-ui/react'
 import { useState, useEffect } from 'react'
-
-// VIEM
-import { createPublicClient, http, parseAbiItem  } from 'viem'
-import { hardhat } from 'viem/chains'
+import { parseAbiItem  } from 'viem'
 
 // WAGMI
 import { useAccount } from 'wagmi'
@@ -18,17 +15,12 @@ import { getTournamentInfos } from '@/components/Utils/Tournament'
 
 export default function Home() {
 
-  const client = createPublicClient({
-    chain: hardhat,
-    transport: http(),
-  })
-
   const [tournaments, setTournaments] = useState([])
   const { isConnected, address } = useAccount()
 
   const getTournamnentEvents = async() => {
     setTournaments([]);
-    const tournamentsLogs = await client.getLogs({
+    const tournamentsLogs = await Client().getLogs({
         event: parseAbiItem('event TournamentCreated(uint id)'),
         fromBlock: 0n
     });
