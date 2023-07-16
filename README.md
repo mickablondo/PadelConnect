@@ -8,7 +8,7 @@ PadelConnect est une application décentralisée de gestion de tournois de Padel
 ### Liens
 
 - Maquettes réalisées sur [Balsamiq.cloud](https://balsamiq.cloud/somhp53/p5sdeh6)
-- [ ] web site deployed : 
+- Url de la dApp déployée : https://padel-connect.vercel.app/
 - Adresse du contrat sur Sepolia : [0x3c53259ED1ba5490c0380De4f8c66e583E515c89](https://sepolia.etherscan.io/address/0x3c53259ED1ba5490c0380De4f8c66e583E515c89)
 - [ ] Adresse du contrat sur Goerli : 
 - [ ] Board of issues
