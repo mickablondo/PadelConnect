@@ -96,36 +96,47 @@ const Tournament = () => {
     }
 
     const send = async () => {
-        try {
-            const { request } = await prepareWriteContract({
-                address: contractAddress,
-                abi: Contract.abi,
-                functionName: "addWinners",
-                args: [params.tournamentId, winner1, winner2]
-            });
-            await writeContract(request);
-
-            const data = await getTournamentInfos(params.tournamentId, address);
-            setTournamentSelected((prevState => ({
-                ...prevState,
-                id: data[0], city: data[1], date: data[2], difficulty: data[3], availables: data[4], winner1: data[5]
-            })));
-
+        if(winner1 == undefined || winner2 == undefined ||
+            winner1 == '' || winner2 == '') {
             toast({
-                title: 'Tournoi terminé.',
-                description: "Les vainqueurs ont bien été ajoutés.",
-                status: 'success',
+                title: 'Champs obligatoires',
+                description: 'Tous les champs doivent être renseignés.',
+                status: 'warning',
                 duration: 4000,
                 isClosable: true,
-            })
-        } catch(err) {
-            toast({
-                title: 'Error.',
-                description: "Une erreur est survenue.",
-                status: 'error',
-                duration: 4000,
-                isClosable: true,
-            })
+              })
+        } else {
+            try {
+                const { request } = await prepareWriteContract({
+                    address: contractAddress,
+                    abi: Contract.abi,
+                    functionName: "addWinners",
+                    args: [params.tournamentId, winner1, winner2]
+                });
+                await writeContract(request);
+    
+                const data = await getTournamentInfos(params.tournamentId, address);
+                setTournamentSelected((prevState => ({
+                    ...prevState,
+                    id: data[0], city: data[1], date: data[2], difficulty: data[3], availables: data[4], winner1: data[5]
+                })));
+    
+                toast({
+                    title: 'Tournoi terminé.',
+                    description: "Les vainqueurs ont bien été ajoutés.",
+                    status: 'success',
+                    duration: 4000,
+                    isClosable: true,
+                })
+            } catch(err) {
+                toast({
+                    title: 'Error',
+                    description: "Une erreur est survenue.",
+                    status: 'error',
+                    duration: 4000,
+                    isClosable: true,
+                })
+            }
         }
     }
 
