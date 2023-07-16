@@ -51,8 +51,9 @@ export default function Home() {
     >
       {isConnected ? (
         <AbsoluteCenter>
+          {tournaments.length > 0 ? (
           <SimpleGrid columns={4} spacing={4}>
-            {tournaments.map(tournament => (
+              {tournaments.map(tournament => (
               <Card key={tournament.id} variant='filled'>
                 <CardHeader>
                   <Heading size='md'>Tournoi de {tournament.city}</Heading>
@@ -70,6 +71,9 @@ export default function Home() {
               </Card>
             ))}
           </SimpleGrid>
+          ) : (
+            <Text as='i' fontSize='6xl'>Aucun tournoi n'a été créé.</Text>
+          )}
         </AbsoluteCenter>
       ) : (
         <NotConnected />
