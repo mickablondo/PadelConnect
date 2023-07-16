@@ -16,7 +16,7 @@ import "./PadelConnectNFT.sol";
 /// @author Mickaël Blondeau
 contract PadelConnect is IPadelConnect, Ownable, PadelConnectNFT {
 
-    /// @notice Map of a manager address to his description
+    /// @notice Map of a manager address to his registration
     mapping(address => bool) public managers;
 
     /// @notice Map of a tournament id to a manager address

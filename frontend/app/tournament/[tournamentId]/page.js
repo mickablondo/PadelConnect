@@ -249,9 +249,9 @@ const Tournament = () => {
                             </Heading>
                             <Flex mt="1rem" flexDirection='column'>
                                 <SimpleGrid columns={1} spacing={4}>
-                                <Input onChange={e => setWinner1(e.target.value)} placeholder="0X..." />
-                                <Input onChange={e => setWinner2(e.target.value)} placeholder="0X..." />
-                                <Button colorScheme='whatsapp' onClick={() => send()}>Envoyer</Button>
+                                    <Input onChange={e => setWinner1(e.target.value)} placeholder="0X..." />
+                                    <Input onChange={e => setWinner2(e.target.value)} placeholder="0X..." />
+                                    <Button colorScheme='whatsapp' onClick={() => send()}>Envoyer</Button>
                                 </SimpleGrid>
                             </Flex>
                         </Flex>

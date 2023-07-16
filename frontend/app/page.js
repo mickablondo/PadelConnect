@@ -1,5 +1,4 @@
 "use client"
-import styles from './page.module.css'
 import { Client } from '@/components/Utils/Client'
 import { Flex, Card, CardBody, AbsoluteCenter, SimpleGrid, CardHeader, Text, Button, Heading, CardFooter } from '@chakra-ui/react'
 import { useState, useEffect } from 'react'
