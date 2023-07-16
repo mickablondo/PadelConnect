@@ -150,8 +150,8 @@ All files             |      100 |      100 |      100 |      100 |             
 
 En version web via le fichier <i>./coverage/contracts/index.html</i> :  
   
+![image](https://github.com/mickablondo/PadelConnect/assets/36310658/bcb1ea3b-f353-4604-86b2-838a36522b02)
 
-  
   
 > **Note**  
 > Ajout de la librairie <i>@nomicfoundation/hardhat-network-helpers</i> pour manipuler la date de la blockchain.
