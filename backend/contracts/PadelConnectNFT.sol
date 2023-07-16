@@ -18,8 +18,7 @@ contract PadelConnectNFT is ERC721URIStorage {
     struct Reward {
         uint tournamentId;
         string tournamentCity;
-        string firstName;
-        string lastName;
+        address _player;
     }
 
     /// @notice Map of a position to the metadatas of a reward
@@ -31,18 +30,14 @@ contract PadelConnectNFT is ERC721URIStorage {
     /// @param _player address of the winner
     /// @param _tournamentId id of the tournament
     /// @param _city name of the city of the tournament
-    /// @param _firstName first name of the winner
-    /// @param _lastName last name of the winner
     function MintReward(
         address _player,
         uint _tournamentId,
-        string memory _city,
-        string memory _firstName,
-        string memory _lastName
+        string memory _city
     ) internal {
         _tokenIds.increment();
         uint256 newItemId = _tokenIds.current();
-        rewards[newItemId] = Reward(_tournamentId, _city, _firstName, _lastName);
+        rewards[newItemId] = Reward(_tournamentId, _city, _player);
         _mint(_player, newItemId);
         _setTokenURI(newItemId, _tokenURI);
     }

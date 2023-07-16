@@ -6,10 +6,10 @@ const { time } = require("@nomicfoundation/hardhat-network-helpers");
 describe("Test PadelConnect", function() {
 
     const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
-    let pcContract, owner, manager, player1, player2, player3, player4;
+    let pcContract, owner, manager, player1, player2, player3, manager2;
 
     beforeEach(async function() {
-        [owner, manager, player1, player2, player3, player4] = await ethers.getSigners();
+        [owner, manager, player1, player2, player3, manager2] = await ethers.getSigners();
         const contract = await ethers.getContractFactory("PadelConnect");
         pcContract = await contract.deploy();
     });
@@ -151,9 +151,10 @@ describe("Test PadelConnect", function() {
     describe("After registrering players", function() {
         beforeEach(async function() {
             await pcContract.connect(owner).addManager(manager);
+            await pcContract.connect(owner).addManager(manager2);
             await pcContract.connect(manager).addTournament('rouen', 2067697299, 3, 16);
-            await pcContract.connect(player1).registerPlayer(0, 'roger', 'federer');
-            await pcContract.connect(player2).registerPlayer(0, 'rafael', 'nadal');
+            await pcContract.connect(player1).registerPlayer(0);
+            await pcContract.connect(player2).registerPlayer(0);
         });
 
         context("Followers", function() {
@@ -186,10 +187,10 @@ describe("Test PadelConnect", function() {
                 expect(tournament.winner2).to.be.equal(player2.address);
             });
 
-            it('should revert when caller is not the manager', async function() {
+            it('should revert when caller is not the good manager', async function() {
                 await expectRevert(
-                    pcContract.connect(owner).addWinners(0, player1, player2),
-                    "Forbidden"
+                    pcContract.connect(manager2).addWinners(0, player1, player2),
+                    "Not the manager"
                 );
             });
 
@@ -312,8 +313,8 @@ describe("Test PadelConnect", function() {
 
             it('should revert when caller is not a manager', async function() {
                 await expectRevert(
-                    pcContract.connect(player1).addPrivateResponseToPlayer(0, player1, "Hello player"),
-                    "Forbidden"
+                    pcContract.connect(manager2).addPrivateResponseToPlayer(0, player1, "Hello player"),
+                    "Not the manager"
                 );
             });
 
@@ -358,45 +359,31 @@ describe("Test PadelConnect", function() {
         it('should add a new player', async function() {
             let tournament = await pcContract.tournaments(0);
             const registrationsAvailable = tournament.registrationsAvailable;
-            await pcContract.connect(player1).registerPlayer(0, 'roger', 'federer');
+            await pcContract.connect(player1).registerPlayer(0);
             tournament = await pcContract.tournaments(0);
             expect(tournament.registrationsAvailable).to.be.lt(registrationsAvailable);
         });
 
         it('should revert if the id does not exist', async function() {
             await expectRevert(
-                pcContract.connect(player1).registerPlayer(5, 'roger', 'federer'),
+                pcContract.connect(player1).registerPlayer(5),
                 "Wrong id sent"
             );
         });
 
-        it('should revert when the first name is empty', async function() {
-            await expectRevert(
-                pcContract.connect(player1).registerPlayer(0, '', 'federer'),
-                "Cannot be empty"
-            );
-        });
-
-        it('should revert when the last name is empty', async function() {
-            await expectRevert(
-                pcContract.connect(player1).registerPlayer(0, 'roger', ''),
-                "Cannot be empty"
-            );
-        });
-
         it('should revert when the player is already registered', async function() {
-            pcContract.connect(player1).registerPlayer(0, 'roger', 'federer');
+            pcContract.connect(player1).registerPlayer(0);
             await expectRevert(
-                pcContract.connect(player1).registerPlayer(0, 'roger', 'federer'),
+                pcContract.connect(player1).registerPlayer(0),
                 "Already registered"
             );
         });
 
         it('should revert when the tournament is complete', async function() {
-            await pcContract.connect(player1).registerPlayer(1, 'roger', 'federer');
-            await pcContract.connect(player2).registerPlayer(1, 'rafael', 'nadal');
+            await pcContract.connect(player1).registerPlayer(1);
+            await pcContract.connect(player2).registerPlayer(1);
             await expectRevert(
-                pcContract.connect(player3).registerPlayer(1, 'micka', 'blondo'),
+                pcContract.connect(player3).registerPlayer(1),
                 "CompleteTournament"
             );
         });
@@ -404,7 +391,7 @@ describe("Test PadelConnect", function() {
         it('should revert when tournament is already started', async function() {
             await time.increaseTo(2087697299);
             await expectRevert(
-                pcContract.connect(player1).registerPlayer(0, 'roger', 'federer'),
+                pcContract.connect(player1).registerPlayer(0),
                 "RegistrationEnded"
             );
         });

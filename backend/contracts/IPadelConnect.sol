@@ -27,12 +27,6 @@ interface IPadelConnect {
         address winner2;
     }
 
-    /// @notice Description of a player
-    struct Player {
-        string lastName;
-        string firstName;
-    }
-
     /// @notice Description of a Comment
     struct Comment {
         string message;
@@ -101,15 +95,11 @@ interface IPadelConnect {
      *
      * Requirements:
      * - `_id` must be less than the length of the array
-     * - `_firstName` cannot be empty
-     * - `_lastName` cannot be empty
      * - date of the registration must be less than the start date of the tournament
      * 
      * @param _id id of the tournament
-     * @param _firstName first name of the player
-     * @param _lastName last name of the player
      */
-    function registerPlayer(uint _id, string calldata _firstName, string calldata _lastName) external;
+    function registerPlayer(uint _id) external;
 
     /**
      * @dev Add the two winners of the tournament and call the mint function to send them a NFT reward.

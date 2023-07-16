@@ -25,9 +25,6 @@ contract PadelConnect is IPadelConnect, Ownable, PadelConnectNFT {
     /// @notice Array of the tournaments
     Tournament[] public tournaments;
 
-    /// @notice Map of a player address to his description
-    mapping(address => Player) players;
-
     /// @notice Map of a tournament id to the players registered
     mapping(uint => mapping(address => bool)) public playersRegistered;
 
@@ -61,6 +58,16 @@ contract PadelConnect is IPadelConnect, Ownable, PadelConnectNFT {
      */
     modifier onlyManagers() {
         require(managers[msg.sender], "Forbidden");
+        _;
+    }
+
+    /**
+     * @dev Only the manager who has created the tournament can manage it.
+     * @param _id the tournament id
+     * @param _address address of the manager to check
+     */
+    modifier onlyTheManagerCreator(uint _id, address _address) {
+        require(linkManagerTournament[_id] == _address, "Not the manager");
         _;
     }
 
@@ -138,7 +145,7 @@ contract PadelConnect is IPadelConnect, Ownable, PadelConnectNFT {
     /**
      * @dev See {IPadelConnect-registerPlayer}.
      */
-    function registerPlayer(uint _id, string calldata _firstName, string calldata _lastName) external shouldIdTournamentExists(_id) notEmptyString(_firstName) notEmptyString(_lastName) {
+    function registerPlayer(uint _id) external shouldIdTournamentExists(_id) {
         require(!playersRegistered[_id][msg.sender], "Already registered");
         Tournament memory tournament = tournaments[_id];
 
@@ -150,7 +157,6 @@ contract PadelConnect is IPadelConnect, Ownable, PadelConnectNFT {
             revert CompleteTournament();
         }
 
-        players[msg.sender] = Player(_lastName, _firstName);
         playersRegistered[_id][msg.sender] = true;
 
         --tournament.registrationsAvailable;
@@ -160,7 +166,7 @@ contract PadelConnect is IPadelConnect, Ownable, PadelConnectNFT {
     /**
      * @dev See {IPadelConnect-addWinners}.
      */
-    function addWinners(uint _id, address _winner1, address _winner2) external onlyManagers() shouldIdTournamentExists(_id) notZeroAddress(_winner1) notZeroAddress(_winner2) {
+    function addWinners(uint _id, address _winner1, address _winner2) external shouldIdTournamentExists(_id) onlyTheManagerCreator(_id, msg.sender) notZeroAddress(_winner1) notZeroAddress(_winner2) {
         require(_winner1 != _winner2, "Same address");
         require(playersRegistered[_id][_winner1] && playersRegistered[_id][_winner2], "Not registered");
 
@@ -169,11 +175,8 @@ contract PadelConnect is IPadelConnect, Ownable, PadelConnectNFT {
 
         string memory city = tournaments[_id].city;
 
-        Player memory tempPlayer = players[_winner1];
-        MintReward(_winner1, _id, city, tempPlayer.firstName, tempPlayer.lastName);
-
-        tempPlayer = players[_winner2];
-        MintReward(_winner2, _id, city, tempPlayer.firstName, tempPlayer.lastName);
+        MintReward(_winner1, _id, city);
+        MintReward(_winner2, _id, city);
     }
 
     /**
@@ -205,7 +208,7 @@ contract PadelConnect is IPadelConnect, Ownable, PadelConnectNFT {
     /**
      * @dev See {IPadelConnect-addPrivateResponseToPlayer}.
      */
-    function addPrivateResponseToPlayer(uint _id, address _player, string calldata _message) external onlyManagers() shouldIdTournamentExists(_id) notZeroAddress(_player) notEmptyString(_message) waitUntilNewPost(msg.sender) {
+    function addPrivateResponseToPlayer(uint _id, address _player, string calldata _message) external shouldIdTournamentExists(_id) onlyTheManagerCreator(_id, msg.sender) notZeroAddress(_player) notEmptyString(_message) waitUntilNewPost(msg.sender) {
         privateComments[_id][_player].push(Comment(_message, msg.sender));
         lastPostDate[msg.sender] = block.timestamp;
         emit PrivateResponseAdded(_id, _player);

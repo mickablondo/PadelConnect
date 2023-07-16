@@ -103,7 +103,7 @@ Résultat :
         ✔ should revert if id does not exist
       Adding winners
         ✔ should add the winners
-        ✔ should revert when caller is not the manager
+        ✔ should revert when caller is not the good manager
         ✔ should revert if the two winners are the same person
         ✔ should revert if id does not exist
         ✔ should revert if winner1 is the 0 address
@@ -129,14 +129,12 @@ Résultat :
     Registering players
       ✔ should add a new player
       ✔ should revert if the id does not exist
-      ✔ should revert when the first name is empty
-      ✔ should revert when the last name is empty
       ✔ should revert when the player is already registered
       ✔ should revert when the tournament is complete
       ✔ should revert when tournament is already started
 
 
-  48 passing (2s)
+  46 passing (2s)
 
 ----------------------|----------|----------|----------|----------|----------------|
 File                  |  % Stmts | % Branch |  % Funcs |  % Lines |Uncovered Lines |
@@ -152,7 +150,7 @@ All files             |      100 |      100 |      100 |      100 |             
 
 En version web via le fichier <i>./coverage/contracts/index.html</i> :  
   
-![image](https://github.com/mickablondo/PadelConnect/assets/36310658/1a3f7c00-bfc8-4d3b-a4a4-87cd560cd755)
+
   
   
 > **Note**  
