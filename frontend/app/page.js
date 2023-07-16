@@ -27,6 +27,7 @@ export default function Home() {
   const { isConnected, address } = useAccount()
 
   const getTournamnentEvents = async() => {
+    setTournaments([]);
     const tournamentsLogs = await client.getLogs({
         event: parseAbiItem('event TournamentCreated(uint id)'),
         fromBlock: 0n
