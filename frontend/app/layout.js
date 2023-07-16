@@ -9,33 +9,24 @@ import {
 } from '@rainbow-me/rainbowkit';
 import { configureChains, createConfig, WagmiConfig } from 'wagmi';
 import {
-  hardhat
+  hardhat, sepolia
 } from 'wagmi/chains';
 import { publicProvider } from 'wagmi/providers/public';
+import { infuraProvider } from 'wagmi/providers/infura';
 import Layout from '@/components/Layout/Layout';
 
 const { chains, publicClient } = configureChains(
-  [hardhat],
+  [hardhat, sepolia],
   [
-    //alchemyProvider({ apiKey: process.env.ALCHEMY_ID }),
+    infuraProvider({ apiKey: process.env.NEXT_INFURA_ID }),
+    // alchemyProvider({ alchemyId: process.env.ALCHEMY_ID }),
     publicProvider()
   ]
 );
 
-/*
-export const { chains, provider, webSocketProvider } = configureChains(
-    [chain.mainnet, chain.goerli, chain.rinkeby, chain.kovan, chain.ropsten],
-    [
-        alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_ID }),
-        jsonRpcProvider({ rpc: (chain) => ({ http: chain.rpcUrls.default }) }),
-        publicProvider(),
-    ],
-);
-*/
-
 const { connectors  } = getDefaultWallets({
   appName: 'Padel Connect',
-  projectId:'ea0cd859091151569ea66d64014c6434',
+  projectId: 'ea0cd859091151569ea66d64014c6434',
   chains
 });
 
