@@ -24,7 +24,7 @@ const Admin = () => {
     setManagers([]);
     const managersLogs = await Client().getLogs({
         event: parseAbiItem('event ManagerAdded(address _address)'),
-        fromBlock: 3910739n
+        fromBlock: BigInt(process.env.NEXT_PUBLIC_NODE_NUMBER)
     });
 
     managersLogs.map(async log => {

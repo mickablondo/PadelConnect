@@ -21,7 +21,7 @@ export default function Home() {
     setTournaments([]);
     const tournamentsLogs = await Client().getLogs({
         event: parseAbiItem('event TournamentCreated(uint id)'),
-        fromBlock: 3910739n
+        fromBlock: BigInt(process.env.NEXT_PUBLIC_NODE_NUMBER)
     });
     const lastTournamentsId = tournamentsLogs.slice(-12); // récupération des 12 derniers tournois enregistrés
 
