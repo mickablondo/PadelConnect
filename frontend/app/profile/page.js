@@ -24,7 +24,7 @@ const Profil = () => {
                 setListFollowed([]);
                 const followedTournamentsLogs = await Client().getLogs({
                     event: parseAbiItem('event TournamentFollowed(uint tournamentId, address player)'),
-                    fromBlock: 0n
+                    fromBlock: 3910739n
                 });
 
                 followedTournamentsLogs.map(async log => {
