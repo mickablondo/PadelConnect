@@ -17,7 +17,7 @@ export default function Home() {
   const [tournaments, setTournaments] = useState([])
   const { isConnected, address } = useAccount()
 
-  const getTournamnentEvents = async() => {
+  const getTournamentEvents = async() => {
     setTournaments([]);
     const tournamentsLogs = await Client().getLogs({
         event: parseAbiItem('event TournamentCreated(uint id)'),
@@ -36,7 +36,7 @@ export default function Home() {
   useEffect(() => {
     async function getTournaments() {
       if(isConnected) {
-        await getTournamnentEvents();
+        await getTournamentEvents();
       }
     }
     getTournaments();
