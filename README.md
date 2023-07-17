@@ -9,7 +9,7 @@ PadelConnect est une application décentralisée de gestion de tournois de Padel
 
 - Maquettes réalisées sur [Balsamiq.cloud](https://balsamiq.cloud/somhp53/p5sdeh6)
 - Url de la dApp déployée : https://padel-connect.vercel.app/
-- Adresse du contrat sur Sepolia : [0x3c53259ED1ba5490c0380De4f8c66e583E515c89](https://sepolia.etherscan.io/address/0x3c53259ED1ba5490c0380De4f8c66e583E515c89)
+- Adresse du contrat sur Sepolia : [0x387A4911227F12e832428dfb2425aDa2EAbFaA6F](https://sepolia.etherscan.io/address/0x387A4911227F12e832428dfb2425aDa2EAbFaA6F)
 - [ ] Adresse du contrat sur Goerli : 
 - [ ] Board of issues
 - [ ] Lien ipfs pour le NFT
@@ -63,6 +63,18 @@ flowchart >
 ### Backend
 ### Frontend
 ### Jeux de données 
+3 scripts ont été créés dans scripts/datas permettant l'insertion de jeux de données :  
+ - add_datas.js : ajoute un manager, plusieurs tournois et un commentaire ;
+ - add_newtournament.js : ajoute un nouveau tournoi ;
+ - register_player.js : enregistre 2 joueurs sur un tournoi et crée 2 commentaires sur ce même tournoi ;
+  
+Pour les exécuter :  
+```bash
+npx hardhat run scripts/datas/add_datas.js --network localhost
+npx hardhat run scripts/datas/add_newtournament.js --network localhost
+npx hardhat run scripts/datas/register_player.js --network localhost
+```
+
 ### Tests unitaires
 Exécuter un noeud Hardhat : 
 ```bash
@@ -100,6 +112,7 @@ Résultat :
     After registrering players
       Followers
         ✔ should adding a follower to a tournament
+        ✔ should emit an event when adding a follower to a tournament
         ✔ should deleting a follower to a tournament
         ✔ should revert if id does not exist
       Adding winners
@@ -135,7 +148,7 @@ Résultat :
       ✔ should revert when tournament is already started
 
 
-  46 passing (2s)
+  47 passing (3s)
 
 ----------------------|----------|----------|----------|----------|----------------|
 File                  |  % Stmts | % Branch |  % Funcs |  % Lines |Uncovered Lines |

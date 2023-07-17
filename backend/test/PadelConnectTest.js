@@ -164,6 +164,17 @@ describe("Test PadelConnect", function() {
                 expect(followIt).to.be.true;
             });
 
+            it('should emit an event when adding a follower to a tournament', async function() {
+                await expect(pcContract.connect(manager).followTournament(0, true))
+                .to.emit(
+                    pcContract,
+                    'TournamentFollowed'
+                ).withArgs(
+                    0,
+                    manager.address
+                );
+            });
+
             it('should deleting a follower to a tournament', async function() {
                 await pcContract.connect(player1).followTournament(0, true);
                 await pcContract.connect(player1).followTournament(0, false);

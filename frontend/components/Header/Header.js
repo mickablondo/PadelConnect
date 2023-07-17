@@ -50,7 +50,7 @@ const Header = () => {
               </MenuItem>
             </NextLink>
             <NextLink href={'/profile'}>
-              <MenuItem icon={<Icon as={MdHome}/>}>
+              <MenuItem icon={<Icon as={MdAccountCircle}/>}>
                 Mon profil
               </MenuItem>
             </NextLink>

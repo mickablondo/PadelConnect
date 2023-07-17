@@ -49,6 +49,11 @@ interface IPadelConnect {
     event TournamentCommentAdded(uint tournamentId);
 
     /**
+     * @dev Emitted when somebody follows a tournament.
+     */
+    event TournamentFollowed(uint tournamentId, address player);
+
+    /**
      * @dev Emitted when player adds a comment to a manager.
      */
     event PrivateCommentAdded(uint tournamentId, address player);

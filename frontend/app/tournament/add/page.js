@@ -27,10 +27,6 @@ const AddTournament = () => {
   const contractAddress = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS;
 
   const addTournament = async () => {
-    console.log(difficulty)
-    console.log(startDate)
-    console.log(city)
-    console.log(playersNumber)
     // check champs requis
     if(difficulty == undefined || startDate == undefined || city == undefined || playersNumber == undefined || 
         difficulty == '' || startDate == '' || city == '' || playersNumber == '') {
