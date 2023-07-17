@@ -18,15 +18,14 @@ import Layout from '@/components/Layout/Layout';
 const { chains, publicClient } = configureChains(
   [hardhat, sepolia],
   [
-    infuraProvider({ apiKey: process.env.NEXT_INFURA_ID }),
-    // alchemyProvider({ alchemyId: process.env.ALCHEMY_ID }),
+    infuraProvider({ apiKey: process.env.NEXT_PUBLIC_INFURA_ID }),
     publicProvider()
   ]
 );
 
 const { connectors  } = getDefaultWallets({
   appName: 'Padel Connect',
-  projectId: 'ea0cd859091151569ea66d64014c6434',
+  projectId: process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECTID,
   chains
 });
 
