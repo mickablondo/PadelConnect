@@ -2,7 +2,7 @@
 import { Flex, Center, Menu, MenuButton, MenuItem, MenuList, Icon, IconButton, Image, Heading, Highlight } from '@chakra-ui/react';
 import { HamburgerIcon, PlusSquareIcon, SettingsIcon, EmailIcon } from '@chakra-ui/icons';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
-import { MdHome } from 'react-icons/md';
+import { MdHome, MdAccountCircle } from 'react-icons/md';
 import NextLink  from 'next/link';
 import { useEffect, useState } from 'react';
 import { isManager, isOwner } from '../Utils/Role';
@@ -47,6 +47,11 @@ const Header = () => {
             <NextLink href={'/'}>
               <MenuItem icon={<Icon as={MdHome}/>}>
                 Accueil
+              </MenuItem>
+            </NextLink>
+            <NextLink href={'/profile'}>
+              <MenuItem icon={<Icon as={MdHome}/>}>
+                Mon profil
               </MenuItem>
             </NextLink>
             { isOwnerValue &&
