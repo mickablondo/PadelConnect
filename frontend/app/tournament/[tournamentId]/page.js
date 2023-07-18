@@ -203,9 +203,11 @@ const Tournament = () => {
                     id: data[0], city: data[1], date: data[2], difficulty: data[3], availables: data[4], winner1: data[5]
                 })));
 
-                // recherche du rôle
+                // recherche le manager du tournoi
+                const managerAddressFromBc = await getManager(id, address);
+                setManagerAddress(managerAddressFromBc);
                 const dataManager = await isManager(address);
-                setIsManagerValue(dataManager);
+                setIsManagerValue(dataManager && (managerAddressFromBc === address));
 
                 // recherche si l'utilisateur suit le tournoi
                 const followData = await readContract({
@@ -220,10 +222,6 @@ const Tournament = () => {
 
                 // recherche des messages à afficher
                 await getMessages(id);
-
-                // recherche le manager du tournoi
-                const managerAddressFromBc = await getManager(id, address);
-                setManagerAddress(managerAddressFromBc);
             }
         }
         getInfos(params.tournamentId);

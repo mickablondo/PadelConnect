@@ -1,8 +1,6 @@
 "use client"
-import Contract from '../../artifacts/contracts/PadelConnect.sol/PadelConnect.json'
-
-// WAGMI
-import { readContract } from '@wagmi/core'
+import Contract from '../../artifacts/contracts/PadelConnect.sol/PadelConnect.json';
+import { readContract } from '@wagmi/core';
 
 const contractAddress = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS;
 
