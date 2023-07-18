@@ -164,6 +164,8 @@ const Tournament = () => {
                 });
                 await writeContract(request);
 
+                refreshInfos(params.tournamentId);
+
                 toast({
                     title: 'Inscription terminée.',
                     description: "Votre inscription est validée.",
@@ -174,6 +176,7 @@ const Tournament = () => {
             } catch(err) {
                 let description = 'Une erreur est survenue.';
                 if(err.details.includes('Already registered')) description = "Vous êtes déjà inscrit !";
+                if(err.details.includes('RegistrationEnded')) description = "Il n'est plus possible de s'inscrire.";
                 toast({
                     title: 'Error',
                     description: description,
@@ -193,15 +196,19 @@ const Tournament = () => {
         }
     }
 
+    const refreshInfos = async (id) => {
+        const data = await getTournamentInfos(id, address);
+        setTournamentSelected((prevState => ({
+            ...prevState,
+            id: data[0], city: data[1], date: data[2], difficulty: data[3], availables: data[4], winner1: data[5]
+        })));
+    }
+
     useEffect(() => {
         async function getInfos(id) {
             if(isConnected) {
-                // recherche des infos    
-                const data = await getTournamentInfos(id, address);
-                setTournamentSelected((prevState => ({
-                    ...prevState,
-                    id: data[0], city: data[1], date: data[2], difficulty: data[3], availables: data[4], winner1: data[5]
-                })));
+                // recherche des infos du tournoi
+                refreshInfos(id);
 
                 // recherche le manager du tournoi
                 const managerAddressFromBc = await getManager(id, address);
