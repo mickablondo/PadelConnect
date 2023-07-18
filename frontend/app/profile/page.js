@@ -40,9 +40,7 @@ const Profil = () => {
 
                     if(followData) {
                         // recherche des informations du tournoi
-                        console.log(followData)
                         const data = await getTournamentInfos(log.args.tournamentId, address);
-                        console.log(data);
                         setListFollowed(oldTournaments => [...oldTournaments, {
                             id: data[0], city: data[1], date: data[2], availables: data[4], winner1: data[5], winner2: data[6]
                         }]);
