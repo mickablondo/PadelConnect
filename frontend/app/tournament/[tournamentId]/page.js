@@ -25,7 +25,7 @@ const Tournament = () => {
     const [managerAddress, setManagerAddress] = useState();
     const [isFollowing, setIsFollowing] = useState(false);
     const [comments, setComments] = useState([]);
-    const [addingComment, setAddingComment] = useState();
+    const [addingComment, setAddingComment] = useState('');
     const toast = useToast();
 
     const contractAddress = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS;
