@@ -9,7 +9,6 @@ import NotConnected from '@/components/NotConnected/NotConnected';
 import { EnumDifficulty } from '@/components/Utils/EnumDifficulty';
 import Contract from '../../../artifacts/contracts/PadelConnect.sol/PadelConnect.json';
 import NextLink  from 'next/link';
-// WAGMI
 import { prepareWriteContract, writeContract, readContract } from '@wagmi/core'
 import { useAccount } from 'wagmi';
 
@@ -148,8 +147,47 @@ const Tournament = () => {
             args: [params.tournamentId, follow]
         });
         await writeContract(request);
-
         setIsFollowing(follow);
+    }
+
+    const register = async () => {
+        if(tournamentSelected !== undefined && tournamentSelected.availables > 0) {
+            try {
+                const { request } = await prepareWriteContract({
+                    address: contractAddress,
+                    abi: Contract.abi,
+                    functionName: "registerPlayer",
+                    args: [params.tournamentId]
+                });
+                await writeContract(request);
+
+                toast({
+                    title: 'Inscription terminée.',
+                    description: "Votre inscription est validée.",
+                    status: 'success',
+                    duration: 4000,
+                    isClosable: true,
+                })
+            } catch(err) {
+                let description = 'Une erreur est survenue.';
+                if(err.details.includes('Already registered')) description = "Vous êtes déjà inscrit !";
+                toast({
+                    title: 'Error',
+                    description: description,
+                    status: 'error',
+                    duration: 4000,
+                    isClosable: true,
+                })
+            }
+        } else {
+            toast({
+                title: 'Inscription annulée.',
+                description: "Nous sommes désolés, il n'y a plus de place.",
+                status: 'warning',
+                duration: 4000,
+                isClosable: true,
+            })
+        }
     }
 
     useEffect(() => {
@@ -300,9 +338,7 @@ const Tournament = () => {
                         height="5%"
                     >
                         <HStack spacing='24px'>
-                            <NextLink href={'/tournament/' + params.tournamentId + '/inscription'}>
-                                <Button colorScheme='telegram'>S'inscrire</Button>
-                            </NextLink>
+                            <Button colorScheme='telegram' onClick={() => register()}>S'inscrire</Button>
                             <NextLink href={'/tournament/' + params.tournamentId + '/ask'}>
                                 <Button colorScheme='telegram'>Contacter le responsable du tournoi</Button>
                             </NextLink>
