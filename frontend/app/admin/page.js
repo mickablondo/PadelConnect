@@ -18,7 +18,7 @@ const Admin = () => {
   const toast = useToast();
   const contractAddress = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS;
   const [managers, setManagers] = useState([]);
-  const [managerAddress, setManagerAddress] = useState([]);
+  const [managerAddress, setManagerAddress] = useState('');
 
   const getManagers = async() => {
     setManagers([]);
@@ -43,6 +43,7 @@ const Admin = () => {
       await writeContract(request);
 
       getManagers();
+      setManagerAddress('');
 
       toast({
           title: 'Manager ajouté',
@@ -82,7 +83,7 @@ const Admin = () => {
           <Flex>
             <HStack spacing='30px'>
               <HStack spacing='24px'>
-                <Input onChange={e => setManagerAddress(e.target.value)} placeholder="0x..." />
+                <Input value={managerAddress} onChange={e => setManagerAddress(e.target.value)} placeholder="0x..." />
                 <Button colorScheme='whatsapp' onClick={() => addManager()}>Ajouter</Button>
               </HStack>
               <TableContainer>

@@ -20,8 +20,8 @@ const Tournament = () => {
     const params = useParams();
     const [isManagerValue, setIsManagerValue] = useState(false);
     const [tournamentSelected, setTournamentSelected] = useState();
-    const [winner1, setWinner1] = useState();
-    const [winner2, setWinner2] = useState();
+    const [winner1, setWinner1] = useState('');
+    const [winner2, setWinner2] = useState('');
     const [managerAddress, setManagerAddress] = useState();
     const [isFollowing, setIsFollowing] = useState(false);
     const [comments, setComments] = useState([]);
@@ -106,6 +106,9 @@ const Tournament = () => {
               })
         } else {
             try {
+                setWinner1('');
+                setWinner2('');
+
                 const { request } = await prepareWriteContract({
                     address: contractAddress,
                     abi: Contract.abi,
@@ -113,7 +116,7 @@ const Tournament = () => {
                     args: [params.tournamentId, winner1, winner2]
                 });
                 await writeContract(request);
-    
+
                 const data = await getTournamentInfos(params.tournamentId, address);
                 setTournamentSelected((prevState => ({
                     ...prevState,
@@ -298,8 +301,8 @@ const Tournament = () => {
                             </Heading>
                             <Flex mt="1rem" flexDirection='column'>
                                 <SimpleGrid columns={1} spacing={4}>
-                                    <Input onChange={e => setWinner1(e.target.value)} placeholder="0X..." />
-                                    <Input onChange={e => setWinner2(e.target.value)} placeholder="0X..." />
+                                    <Input value={winner1} onChange={e => setWinner1(e.target.value)} placeholder="0X..." />
+                                    <Input value={winner2} onChange={e => setWinner2(e.target.value)} placeholder="0X..." />
                                     <Button colorScheme='whatsapp' onClick={() => send()}>Envoyer</Button>
                                 </SimpleGrid>
                             </Flex>
