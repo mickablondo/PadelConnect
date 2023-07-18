@@ -27,23 +27,27 @@ const Profil = () => {
                     fromBlock: BigInt(process.env.NEXT_PUBLIC_NODE_NUMBER)
                 });
 
-                followedTournamentsLogs.map(async log => {
-                    // recherche si l'utilisateur suit toujours le tournoi
-                    // car il a pu suivre (avec emit de l'event) et arrêter de suivre ensuite
-                    const followData = await readContract({
-                        address: contractAddress,
-                        abi: Contract.abi,
-                        functionName: "followedTournaments",
-                        args: [log.args.tournamentId, address],
-                        account: address
-                    });
+                console.log(followedTournamentsLogs);
 
-                    if(followData) {
-                        // recherche des informations du tournoi
-                        const data = await getTournamentInfos(log.args.tournamentId, address);
-                        setListFollowed(oldTournaments => [...oldTournaments, {
-                            id: data[0], city: data[1], date: data[2], availables: data[4], winner1: data[5], winner2: data[6]
-                        }]);
+                followedTournamentsLogs.map(async log => {
+                    if(log.args.player === address) {
+                        // recherche si l'utilisateur suit toujours le tournoi
+                        // car il a pu suivre (avec emit de l'event) et arrêter de suivre ensuite
+                        const followData = await readContract({
+                            address: contractAddress,
+                            abi: Contract.abi,
+                            functionName: "followedTournaments",
+                            args: [log.args.tournamentId, address],
+                            account: address
+                        });
+
+                        if(followData) {
+                            // recherche des informations du tournoi
+                            const data = await getTournamentInfos(log.args.tournamentId, address);
+                            setListFollowed(oldTournaments => [...oldTournaments, {
+                                id: data[0], city: data[1], date: data[2], availables: data[4], winner1: data[5], winner2: data[6]
+                            }]);
+                        }
                     }
                 });
             }
