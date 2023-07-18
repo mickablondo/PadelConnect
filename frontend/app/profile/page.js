@@ -27,12 +27,9 @@ const Profil = () => {
                     fromBlock: BigInt(process.env.NEXT_PUBLIC_NODE_NUMBER)
                 });
 
-                console.log(followedTournamentsLogs);
-
                 followedTournamentsLogs.map(async log => {
                     if(log.args.player === address) {
                         // recherche si l'utilisateur suit toujours le tournoi
-                        // car il a pu suivre (avec emit de l'event) et arrêter de suivre ensuite
                         const followData = await readContract({
                             address: contractAddress,
                             abi: Contract.abi,
