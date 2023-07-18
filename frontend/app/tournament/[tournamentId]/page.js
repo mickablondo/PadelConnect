@@ -11,6 +11,7 @@ import Contract from '../../../artifacts/contracts/PadelConnect.sol/PadelConnect
 import NextLink  from 'next/link';
 import { prepareWriteContract, writeContract, readContract } from '@wagmi/core'
 import { useAccount } from 'wagmi';
+import InputEmoji from "react-input-emoji";
 
 /**
  * Fiche tournoi
@@ -332,7 +333,7 @@ const Tournament = () => {
                             </Table>
                         </TableContainer>
                         <HStack spacing='24px'>
-                            <Input value={addingComment} onChange={e => setAddingComment(e.target.value)} placeholder="Mon message ..." />
+                            <InputEmoji value={addingComment} onChange={setAddingComment} placeholder="Mon message ..."/>
                             <Button colorScheme='whatsapp' onClick={() => writeMessage()}>Envoyer</Button>
                         </HStack>
                     </Flex>
