@@ -53,7 +53,6 @@ const Admin = () => {
           isClosable: true,
       })
     } catch(err) {
-        console.log(err);
         toast({
             title: 'Error.',
             description: 'Une erreur est survenue.',
