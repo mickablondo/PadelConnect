@@ -66,12 +66,14 @@ flowchart >
 ### Jeux de données 
 3 scripts ont été créés dans scripts/datas permettant l'insertion de jeux de données :  
  - add_datas.js : ajoute un manager, plusieurs tournois et un commentaire ;
- - add_newtournament.js : ajoute un nouveau tournoi ;
- - register_player.js : enregistre 2 joueurs sur un tournoi et crée 2 commentaires sur ce même tournoi ;
+ - add_messages_to_manager.js : crée 3 messages entre un joueur et un manager (pré-requis : add_datas.js);
+ - add_newtournament.js : ajoute un nouveau tournoi (pré-requis : add_datas.js);
+ - register_player.js : enregistre 2 joueurs sur un tournoi et crée 2 commentaires sur ce même tournoi (pré-requis : add_datas.js);
   
 Pour les exécuter :  
 ```bash
 npx hardhat run scripts/datas/add_datas.js --network localhost
+npx hardhat run scripts/datas/add_messages_to_manager.js --network localhost
 npx hardhat run scripts/datas/add_newtournament.js --network localhost
 npx hardhat run scripts/datas/register_player.js --network localhost
 ```
