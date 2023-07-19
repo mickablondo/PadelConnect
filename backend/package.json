@@ -4,7 +4,8 @@
     "@openzeppelin/contracts": "^4.9.2",
     "@openzeppelin/test-helpers": "^0.5.16",
     "dotenv": "^16.3.1",
-    "hardhat": "^2.16.1"
+    "hardhat": "^2.16.1",
+    "timers": "^0.1.1"
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "^3.0.0"

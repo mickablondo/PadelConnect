@@ -54,16 +54,6 @@ interface IPadelConnect {
     event TournamentFollowed(uint tournamentId, address player);
 
     /**
-     * @dev Emitted when player adds a comment to a manager.
-     */
-    event PrivateCommentAdded(uint tournamentId, address player);
-
-    /**
-     * @dev Emitted when a manager adds a response to a player..
-     */
-    event PrivateResponseAdded(uint tournamentId, address player);
-
-    /**
      * @dev Add a new tournament manager with his informations.
      *
      * Requirements:
@@ -94,6 +84,13 @@ interface IPadelConnect {
      * @param _maxPlayers maximum number of players
      */
     function addTournament(string calldata _city, uint _date, uint8 _diff, uint8 _maxPlayers) external;
+
+    /**
+     * @dev Get the tournaments of the caller.
+     *
+     * @return array of the tournaments id managed by the caller
+     */
+    function getTournaments() external view returns(uint[] memory);
 
     /**
      * @dev Register a player to a tournament and pay the manager.
@@ -154,12 +151,20 @@ interface IPadelConnect {
      * - `_id` must be less than the length of the array
      * - `_message` cannot be empty
      *
-     * Emits a {PrivateCommentAdded} event.
+     * Emits a {MessageAdded} event.
      * 
      * @param _id id of the tournament which represents a subject of the forum
      * @param _message the message to add
      */
-    function addPrivateCommentToManager(uint _id, string calldata _message) external;
+    function addMessageToManager(uint _id, string calldata _message) external;
+
+    /**
+     * @dev Get the players who has sent messages to a manager.
+     *
+     * @param _id of the tournament
+     * @return array of the addresses of the players
+     */
+    function getExchanges(uint _id) external view returns(address[] memory);
 
     /**
      * @dev Add response to a player of a tournament.
@@ -168,12 +173,24 @@ interface IPadelConnect {
      * - `_id` must be less than the length of the array
      * - `_player` cannot be the zero address
      * - `_message` cannot be empty
-     *
-     * Emits a {PrivateCommentAdded} event.
      * 
      * @param _id id of the tournament which represents a subject of the forum
      * @param _player address of the player
      * @param _message the message to add
      */
-    function addPrivateResponseToPlayer(uint _id, address _player, string calldata _message) external;
+    function addResponseToPlayer(uint _id, address _player, string calldata _message) external;
+
+    /**
+     * @dev Get messages between a player and the manager of the tournament.
+     *
+     * Requirements:
+     * - `_id` must be less than the length of the array
+     * - `_player` cannot be the zero address
+     * - `_message` cannot be empty
+     * 
+     * @param _id id of the tournament
+     * @param _player address of the player
+     * @return array of the comments
+     */
+    function getMessagesManagerPlayer(uint _id, address _player) external view returns(Comment[] memory);
 }

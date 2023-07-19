@@ -1,5 +1,8 @@
 const { ethers } = require('hardhat');
 
+/**
+ * PRE REQUIS - add_datas.js
+ */
 async function main() {
     let owner, manager;
 

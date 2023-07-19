@@ -3,10 +3,7 @@ import { Client } from '@/components/Utils/Client'
 import { Flex, Card, CardBody, AbsoluteCenter, SimpleGrid, CardHeader, Text, Button, Heading, CardFooter } from '@chakra-ui/react'
 import { useState, useEffect } from 'react'
 import { parseAbiItem  } from 'viem'
-
-// WAGMI
 import { useAccount } from 'wagmi'
-
 import NotConnected from '@/components/NotConnected/NotConnected'
 import Link from 'next/link'
 import { EnumDifficulty } from '@/components/Utils/EnumDifficulty'

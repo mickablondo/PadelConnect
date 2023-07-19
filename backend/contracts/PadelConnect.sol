@@ -3,9 +3,9 @@ pragma solidity 0.8.20;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "./IPadelConnect.sol";
-import "./PadelConnectNFT.sol";
 
 // TODO revoir visibilité
+// TODO revérifier utilité de toutes les variables
 // TODO mapping(uint => Tournament) : mieux que array, non ?
 
 /// @title Padel tournament management contract
@@ -14,13 +14,16 @@ import "./PadelConnectNFT.sol";
 ///      The tournament managers create tournaments.
 ///      The players register for tournaments. 
 /// @author Mickaël Blondeau
-contract PadelConnect is IPadelConnect, Ownable, PadelConnectNFT {
+contract PadelConnect is IPadelConnect, Ownable {
 
     /// @notice Map of a manager address to his registration
     mapping(address => bool) public managers;
 
     /// @notice Map of a tournament id to a manager address
     mapping(uint => address) public linkManagerTournament;
+
+    /// @notice Map of a manager to his tournament ids
+    mapping(address => uint[]) linkTournamentsByManager;
 
     /// @notice Array of the tournaments
     Tournament[] public tournaments;
@@ -39,7 +42,10 @@ contract PadelConnect is IPadelConnect, Ownable, PadelConnectNFT {
     mapping(uint => uint) public idComments;
 
     /// @notice Map of a tournament to a map of a player address to the private comments
-    mapping(uint => mapping(address => Comment[])) privateComments; // TODO à revérifier
+    mapping(uint => mapping(address => Comment[])) messages;
+
+    /// @notice Map of a tournament to the players who have sent messages to the manager
+    mapping(uint => address[]) exchanges;
 
     /// @notice Map of an address to a timestamp
     mapping(address => uint) lastPostDate;
@@ -103,7 +109,7 @@ contract PadelConnect is IPadelConnect, Ownable, PadelConnectNFT {
      * @param _address the address of the author
      */
     modifier waitUntilNewPost(address _address) {
-        require(lastPostDate[msg.sender] < block.timestamp - 10, "Wait 10s");
+        require(lastPostDate[msg.sender] < block.timestamp - 2, "Wait 2s");
         _;
     }
 
@@ -139,7 +145,15 @@ contract PadelConnect is IPadelConnect, Ownable, PadelConnectNFT {
         );
 
         linkManagerTournament[id] = msg.sender;
+        linkTournamentsByManager[msg.sender].push(id);
         emit TournamentCreated(id);
+    }
+
+    /**
+     * @dev See {IPadelConnect-getTournaments}.
+     */
+    function getTournaments() external view returns(uint[] memory) {
+        return linkTournamentsByManager[msg.sender];
     }
 
     /**
@@ -172,11 +186,6 @@ contract PadelConnect is IPadelConnect, Ownable, PadelConnectNFT {
 
         tournaments[_id].winner1 = _winner1;
         tournaments[_id].winner2 = _winner2;
-
-        string memory city = tournaments[_id].city;
-
-        MintReward(_winner1, _id, city);
-        MintReward(_winner2, _id, city);
     }
 
     /**
@@ -200,20 +209,36 @@ contract PadelConnect is IPadelConnect, Ownable, PadelConnectNFT {
     }
 
     /**
-     * @dev See {IPadelConnect-addPrivateCommentToManager}.
+     * @dev See {IPadelConnect-addCommentToManager}.
      */
-    function addPrivateCommentToManager(uint _id, string calldata _message) external shouldIdTournamentExists(_id) notEmptyString(_message) waitUntilNewPost(msg.sender) {
-        privateComments[_id][msg.sender].push(Comment(_message, msg.sender));
+    function addMessageToManager(uint _id, string calldata _message) external shouldIdTournamentExists(_id) notEmptyString(_message) waitUntilNewPost(msg.sender) {
+        messages[_id][msg.sender].push(Comment(_message, msg.sender));
         lastPostDate[msg.sender] = block.timestamp;
-        emit PrivateCommentAdded(_id, msg.sender);
+        // pour éviter les doublons
+        if(messages[_id][msg.sender].length == 1) {
+            exchanges[_id].push(msg.sender);
+        }
     }
 
     /**
-     * @dev See {IPadelConnect-addPrivateResponseToPlayer}.
+     * @dev See {IPadelConnect-getExchanges}.
      */
-    function addPrivateResponseToPlayer(uint _id, address _player, string calldata _message) external shouldIdTournamentExists(_id) onlyTheManagerCreator(_id, msg.sender) notZeroAddress(_player) notEmptyString(_message) waitUntilNewPost(msg.sender) {
-        privateComments[_id][_player].push(Comment(_message, msg.sender));
+    function getExchanges(uint _id) external view returns(address[] memory) {
+        return exchanges[_id];
+    }
+
+    /**
+     * @dev See {IPadelConnect-addResponseToPlayer}.
+     */
+    function addResponseToPlayer(uint _id, address _player, string calldata _message) external shouldIdTournamentExists(_id) onlyTheManagerCreator(_id, msg.sender) notZeroAddress(_player) notEmptyString(_message) waitUntilNewPost(msg.sender) {
+        messages[_id][_player].push(Comment(_message, msg.sender));
         lastPostDate[msg.sender] = block.timestamp;
-        emit PrivateResponseAdded(_id, _player);
+    }
+
+    /**
+     * @dev See {IPadelConnect-getMessagesManagerPlayer}.
+     */
+    function getMessagesManagerPlayer(uint _id, address _player) external shouldIdTournamentExists(_id) notZeroAddress(_player) view returns(Comment[] memory) {
+        return messages[_id][_player];
     }
 }

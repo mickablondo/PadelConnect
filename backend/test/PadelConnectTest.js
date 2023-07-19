@@ -2,6 +2,7 @@ const { ethers } = require('hardhat');
 const { expect } = require('chai');
 const { BN, expectRevert } = require('@openzeppelin/test-helpers');
 const { time } = require("@nomicfoundation/hardhat-network-helpers");
+const { setTimeout } = require('timers/promises');
 
 describe("Test PadelConnect", function() {
 
@@ -61,6 +62,12 @@ describe("Test PadelConnect", function() {
         });
 
         it('should add a new tournament', async function() {
+            await pcContract.connect(manager).addTournament('rouen', 2067697299, 3, 16);
+            const tournaments = await pcContract.connect(manager).getTournaments();
+            expect(tournaments.length).to.be.equal(1);
+        });
+
+        it('should emit an event when adding a new tournament', async function() {
             await expect(pcContract.connect(manager).addTournament('rouen', 2067697299, 3, 16))
                 .to.emit(
                     pcContract,
@@ -263,7 +270,7 @@ describe("Test PadelConnect", function() {
                 pcContract.connect(player2).addComment(0, "Hello everyone");
                 await expectRevert(
                     pcContract.connect(player2).addComment(0, "How are you ?"),
-                    "Wait 10s"
+                    "Wait 2s"
                 );
             });
 
@@ -275,85 +282,97 @@ describe("Test PadelConnect", function() {
             });
         });
     
-        context("Private messages from a player", function() {
-            it('should add a new private commment', async function() {
-                await expect(pcContract.connect(player1).addPrivateCommentToManager(0, "Hello manager"))
-                .to.emit(
-                    pcContract,
-                    'PrivateCommentAdded'
-                ).withArgs(
-                    0,
-                    player1.address
-                );
+        context("Messages from a player to a manager", function() {
+            it('should add a new message to a manager', async function() {
+                await pcContract.connect(player1).addMessageToManager(0, "Hello manager");
+                const exchanges = await pcContract.connect(player1).getExchanges(0);
+                expect(exchanges[0]).to.be.equal(player1.address);
+            });
+
+            it('should not modify the exchanges array when adding two new messages to a manager', async function() {
+                await pcContract.connect(player1).addMessageToManager(0, "Hello manager");
+                await setTimeout(3000);
+                await pcContract.connect(player1).addMessageToManager(0, "How are you ?");
+                const exchanges = await pcContract.connect(player1).getExchanges(0);
+                expect(exchanges.length).to.be.equal(1);
             });
 
             it('should revert if id does not exist', async function() {
                 await expectRevert(
-                    pcContract.connect(player1).addPrivateCommentToManager(112, "Hello manager"),
+                    pcContract.connect(player1).addMessageToManager(112, "Hello manager"),
                     "Wrong id sent"
                 );
             });
 
             it('should revert when player send many messages in a short time', async function() {
-                pcContract.connect(player2).addPrivateCommentToManager(0, "Hello manager");
+                pcContract.connect(player2).addMessageToManager(0, "Hello manager");
                 await expectRevert(
-                    pcContract.connect(player2).addPrivateCommentToManager(0, "How are you ?"),
-                    "Wait 10s"
+                    pcContract.connect(player2).addMessageToManager(0, "How are you ?"),
+                    "Wait 2s"
                 );
             });
 
             it('should revert if message is empty', async function() {
                 await expectRevert(
-                    pcContract.connect(player3).addPrivateCommentToManager(0, ''),
+                    pcContract.connect(player3).addMessageToManager(0, ''),
                     "Cannot be empty"
                 );
             });
         });
 
-        context("Response to the private messages by the manager", function() {
-            it('should add a new private response', async function() {
-                await expect(pcContract.connect(manager).addPrivateResponseToPlayer(0, player1, "Hello player"))
-                .to.emit(
-                    pcContract,
-                    'PrivateResponseAdded'
-                ).withArgs(
-                    0,
-                    player1.address
-                );
+        context("Response to the messages by the manager", function() {
+            it('should add a new response', async function() {
+                await pcContract.connect(manager).addResponseToPlayer(0, player1, "Hello player");
+                const comments = await pcContract.connect(manager).getMessagesManagerPlayer(0, player1);
+                expect(comments.length).to.be.greaterThan(0);
             });
 
             it('should revert when caller is not a manager', async function() {
                 await expectRevert(
-                    pcContract.connect(manager2).addPrivateResponseToPlayer(0, player1, "Hello player"),
+                    pcContract.connect(manager2).addResponseToPlayer(0, player1, "Hello player"),
                     "Not the manager"
                 );
             });
 
             it('should revert if id does not exist', async function() {
                 await expectRevert(
-                    pcContract.connect(manager).addPrivateResponseToPlayer(112, player1, "Hello player"),
+                    pcContract.connect(manager).addResponseToPlayer(112, player1, "Hello player"),
                     "Wrong id sent"
                 );
             });
 
             it('should revert when player send many messages in a short time', async function() {
-                pcContract.connect(manager).addPrivateResponseToPlayer(0, player1, "Hello player");
+                pcContract.connect(manager).addResponseToPlayer(0, player1, "Hello player");
                 await expectRevert(
-                    pcContract.connect(manager).addPrivateResponseToPlayer(0, player1, "Ready player one ?"),
-                    "Wait 10s"
+                    pcContract.connect(manager).addResponseToPlayer(0, player1, "Ready player one ?"),
+                    "Wait 2s"
                 );
             });
 
             it('should revert if message is empty', async function() {
                 await expectRevert(
-                    pcContract.connect(manager).addPrivateResponseToPlayer(0, player1, ''),
+                    pcContract.connect(manager).addResponseToPlayer(0, player1, ''),
                     "Cannot be empty"
                 );
             });
 
             it('should revert when player address is the zero address', async function() {
                 await expectRevert(
-                    pcContract.connect(manager).addPrivateResponseToPlayer(0, ZERO_ADDRESS, "Hello player"),
+                    pcContract.connect(manager).addResponseToPlayer(0, ZERO_ADDRESS, "Hello player"),
+                    "Cannot be the zero address"
+                );
+            });
+
+            it('should revert if id does not exist when getting messages', async function() {
+                await expectRevert(
+                    pcContract.connect(player1).getMessagesManagerPlayer(112, player1),
+                    "Wrong id sent"
+                );
+            });
+
+            it('should revert when player address is the zero address when getting messages', async function() {
+                await expectRevert(
+                    pcContract.connect(manager).getMessagesManagerPlayer(0, ZERO_ADDRESS),
                     "Cannot be the zero address"
                 );
             });
