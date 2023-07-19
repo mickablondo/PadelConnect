@@ -184,3 +184,10 @@ it('should revert when tournament is already started', async function() {
     );
 });
 ```
+
+> **Note**  
+> Ajout de la librairie <i>timers/promises</i> pour forcer un temps d'attente entre 2 messages envoyés.
+
+```sh
+✔ should not modify the exchanges array when adding two new messages to a manager (3025ms)
+```
