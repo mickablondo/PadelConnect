@@ -99,6 +99,7 @@ Résultat :
       ✔ should revert when the address was ever registered
     Adding tournaments
       ✔ should add a new tournament
+      ✔ should emit an event when adding a new tournament
       ✔ should revert when caller is not a manager
       ✔ should revert when the city is empty
       ✔ should revert when the date is in the past
@@ -129,18 +130,21 @@ Résultat :
         ✔ should revert if id does not exist
         ✔ should revert when player send many messages in a short time
         ✔ should revert if message is empty
-      Private messages from a player
-        ✔ should add a new private commment
+      Messages from a player to a manager
+        ✔ should add a new message to a manager
+        ✔ should not modify the exchanges array when adding two new messages to a manager (3025ms)
         ✔ should revert if id does not exist
         ✔ should revert when player send many messages in a short time
         ✔ should revert if message is empty
-      Response to the private messages by the manager
-        ✔ should add a new private response
+      Response to the messages by the manager
+        ✔ should add a new response
         ✔ should revert when caller is not a manager
         ✔ should revert if id does not exist
         ✔ should revert when player send many messages in a short time
         ✔ should revert if message is empty
         ✔ should revert when player address is the zero address
+        ✔ should revert if id does not exist when getting messages
+        ✔ should revert when player address is the zero address when getting messages
     Registering players
       ✔ should add a new player
       ✔ should revert if the id does not exist
@@ -149,23 +153,22 @@ Résultat :
       ✔ should revert when tournament is already started
 
 
-  47 passing (3s)
+  51 passing (5s)
 
-----------------------|----------|----------|----------|----------|----------------|
-File                  |  % Stmts | % Branch |  % Funcs |  % Lines |Uncovered Lines |
-----------------------|----------|----------|----------|----------|----------------|
- contracts/           |      100 |      100 |      100 |      100 |                |
-  IPadelConnect.sol   |      100 |      100 |      100 |      100 |                |
-  PadelConnect.sol    |      100 |      100 |      100 |      100 |                |
-  PadelConnectNFT.sol |      100 |      100 |      100 |      100 |                |
-----------------------|----------|----------|----------|----------|----------------|
-All files             |      100 |      100 |      100 |      100 |                |
-----------------------|----------|----------|----------|----------|----------------|
+--------------------|----------|----------|----------|----------|----------------|
+File                |  % Stmts | % Branch |  % Funcs |  % Lines |Uncovered Lines |
+--------------------|----------|----------|----------|----------|----------------|
+ contracts/         |      100 |      100 |      100 |      100 |                |
+  IPadelConnect.sol |      100 |      100 |      100 |      100 |                |
+  PadelConnect.sol  |      100 |      100 |      100 |      100 |                |
+--------------------|----------|----------|----------|----------|----------------|
+All files           |      100 |      100 |      100 |      100 |                |
+--------------------|----------|----------|----------|----------|----------------|
 ```
 
 En version web via le fichier <i>./coverage/contracts/index.html</i> :  
   
-![image](https://github.com/mickablondo/PadelConnect/assets/36310658/bcb1ea3b-f353-4604-86b2-838a36522b02)
+![image](https://github.com/mickablondo/PadelConnect/assets/36310658/d1c573b0-bf1e-4878-b43c-3fcf40ea5b20)
 
   
 > **Note**  
