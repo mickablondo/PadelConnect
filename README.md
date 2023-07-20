@@ -134,7 +134,7 @@ Résultat :
         ✔ should revert if message is empty
       Messages from a player to a manager
         ✔ should add a new message to a manager
-        ✔ should not modify the exchanges array when adding two new messages to a manager (3025ms)
+        ✔ should not modify the exchanges array when adding two new messages to a manager (3024ms)
         ✔ should revert if id does not exist
         ✔ should revert when player send many messages in a short time
         ✔ should revert if message is empty
@@ -148,14 +148,15 @@ Résultat :
         ✔ should revert if id does not exist when getting messages
         ✔ should revert when player address is the zero address when getting messages
     Registering players
-      ✔ should add a new player
+      ✔ should decrease the number of registrations allowed when adding a new player
+      ✔ should add a new tournament for the player registered
       ✔ should revert if the id does not exist
       ✔ should revert when the player is already registered
       ✔ should revert when the tournament is complete
       ✔ should revert when tournament is already started
 
 
-  51 passing (5s)
+  52 passing (5s)
 
 --------------------|----------|----------|----------|----------|----------------|
 File                |  % Stmts | % Branch |  % Funcs |  % Lines |Uncovered Lines |
@@ -170,7 +171,7 @@ All files           |      100 |      100 |      100 |      100 |               
 
 En version web via le fichier <i>./coverage/contracts/index.html</i> :  
   
-![image](https://github.com/mickablondo/PadelConnect/assets/36310658/d1c573b0-bf1e-4878-b43c-3fcf40ea5b20)
+![image](https://github.com/mickablondo/PadelConnect/assets/36310658/5e6ecd0b-828e-4323-877d-ca8acf726039)
 
   
 > **Note**  
