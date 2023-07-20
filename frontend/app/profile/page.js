@@ -54,12 +54,19 @@ const Profil = () => {
         async function getRegisterTournaments() {
             if(isConnected) {
                 setListRegistered([]);
-                const registerData = await readContract({
+                const registersData = await readContract({
                     address: contractAddress,
                     abi: Contract.abi,
-                    functionName: "tournamentsByPlayer",
-                    args: [address],
+                    functionName: "getTournamentsByPlayer",
                     account: address
+                });
+
+                registersData.map(async registerData => {
+                    // recherche des informations du tournoi
+                    const data = await getTournamentInfos(registerData, address);
+                    setListRegistered(oldRegistered => [...oldRegistered, {
+                        id: data[0], city: data[1], date: data[2]
+                    }]);
                 });
             }
         }
@@ -99,8 +106,23 @@ const Profil = () => {
                             <Text fontSize='4xl' as='i'>Aucun tournoi suivi.</Text>
                         )}
                         </Flex>
-                        <Flex>
+                        <Flex flexDirection='column'>
                             <Text fontSize='6xl'>Mes inscriptions :</Text>
+                            {listRegistered.length > 0 ? (
+                                <List spacing={3}>
+                                {listRegistered.map(tournamentRegistered => (
+                                    <ListItem key={uuidv4()}>
+                                        <HStack spacing='30px'>
+                                            <ListIcon as={MdCheckCircle} color='green.500' />
+                                            <Link href={"/tournament/" + tournamentRegistered.id}><Text as='b'>{tournamentRegistered.city}</Text></Link>
+                                            <Text> le {new Date(parseInt(tournamentRegistered.date) * 1000).toLocaleDateString("fr")}</Text>
+                                        </HStack>
+                                    </ListItem>
+                                ))}
+                                </List>
+                            ) : (
+                                <Text fontSize='4xl' as='i'>Aucune inscription réalisée.</Text>
+                            )}
                         </Flex>
                     </HStack>
                 </AbsoluteCenter>
