@@ -11,8 +11,11 @@ import { getTournamentInfos } from '@/components/Utils/Tournament'
 
 export default function Home() {
 
-  const [tournaments, setTournaments] = useState([])
-  const { isConnected, address } = useAccount()
+  const [tournaments, setTournaments] = useState([]);
+  const { isConnected, address } = useAccount();
+
+  // snippet for 'Expected server HTML to contain a matching ...'
+  const [mounted, setMounted] = useState(false);
 
   const getTournamentEvents = async() => {
     setTournaments([]);
@@ -36,10 +39,11 @@ export default function Home() {
         await getTournamentEvents();
       }
     }
+    setMounted(true);
     getTournaments();
   }, [address])
 
-  return (
+  return ( mounted && 
     <Flex 
       width="100%" 
       direction={["column", "column", "row", "row"]} 

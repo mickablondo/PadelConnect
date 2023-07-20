@@ -17,6 +17,9 @@ const MessageBoard = () => {
     const [exchanges, setExchanges] = useState([]);
     const contractAddress = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS;
 
+    // snippet for 'Expected server HTML to contain a matching ...'
+    const [mounted, setMounted] = useState(false);
+
     const getPlayers = async () => {
         setExchanges([]);
         const listTournaments = await getTournamentsByManager(address);
@@ -44,10 +47,11 @@ const MessageBoard = () => {
 
             getPlayers();
         }
+        setMounted(true);
         getInfos();
     }, [address])
 
-    return (
+    return ( mounted && 
         <>
         {isConnected ? (
             <AbsoluteCenter>

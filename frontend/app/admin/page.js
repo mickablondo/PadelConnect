@@ -20,6 +20,9 @@ const Admin = () => {
   const [managers, setManagers] = useState([]);
   const [managerAddress, setManagerAddress] = useState('');
 
+  // snippet for 'Expected server HTML to contain a matching ...'
+  const [mounted, setMounted] = useState(false);
+
   const getManagers = async() => {
     setManagers([]);
     const managersLogs = await Client().getLogs({
@@ -72,10 +75,11 @@ const Admin = () => {
       // get the managers
       await getManagers();
     }
+    setMounted(true);
     getInfos();
   }, [address]);
 
-  return (
+  return ( mounted && 
     <>
       {isConnected ? (
         <AbsoluteCenter>

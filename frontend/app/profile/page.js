@@ -19,6 +19,9 @@ const Profil = () => {
     const contractAddress = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS;
     const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
 
+    // snippet for 'Expected server HTML to contain a matching ...'
+    const [mounted, setMounted] = useState(false);
+
     useEffect(() => {
         async function getFollowedTournaments() {
             if(isConnected) {
@@ -70,12 +73,12 @@ const Profil = () => {
                 });
             }
         }
-
+        setMounted(true);
         getFollowedTournaments();
         getRegisterTournaments();
     }, [address]);
 
-    return (
+    return ( mounted && 
         <>
             {isConnected ? (
                 <AbsoluteCenter>

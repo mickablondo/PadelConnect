@@ -26,6 +26,9 @@ const AddTournament = () => {
   const toast = useToast();
   const contractAddress = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS;
 
+  // snippet for 'Expected server HTML to contain a matching ...'
+  const [mounted, setMounted] = useState(false);
+
   const addTournament = async () => {
     // check champs requis
     if(difficulty == undefined || startDate == undefined || city == undefined || playersNumber == undefined || 
@@ -84,10 +87,11 @@ const AddTournament = () => {
         if(!dataManager) router.replace('/');
       }
     }
+    setMounted(true);
     getInfos();
   })
 
-  return (
+  return ( mounted && 
     <>
       {isConnected ? (
         <AbsoluteCenter>

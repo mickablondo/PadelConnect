@@ -33,6 +33,9 @@ const Tournament = () => {
     const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
     const MAX_MESSAGES = 10;
 
+    // snippet for 'Expected server HTML to contain a matching ...'
+    const [mounted, setMounted] = useState(false);
+
     const getMessages = async (id) => {
         let data = await readContract({
             address: contractAddress,
@@ -232,10 +235,11 @@ const Tournament = () => {
                 await getMessages(id);
             }
         }
+        setMounted(true);
         getInfos(params.tournamentId);
       }, [address]);
 
-    return (
+    return ( mounted && 
         <>
             {isConnected ? (
                 <Flex       

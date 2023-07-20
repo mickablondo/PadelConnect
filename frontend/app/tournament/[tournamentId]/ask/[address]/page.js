@@ -21,6 +21,9 @@ const Ask = () => {
     const contractAddress = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS;
     const MAX_MESSAGES = 10; // 10 derniers messages affichés seulement
 
+    // snippet for 'Expected server HTML to contain a matching ...'
+    const [mounted, setMounted] = useState(false);
+
     const writeMessage = async () => {
         try {
             let functionToCall = "addMessageToManager";
@@ -99,10 +102,11 @@ const Ask = () => {
                 getMessages();
             }
         }
+        setMounted(true);
         getInfos();
       }, [address]);
 
-    return (
+    return ( mounted && 
         <>
             {isConnected ? (
                 <AbsoluteCenter>
