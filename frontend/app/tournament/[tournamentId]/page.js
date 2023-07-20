@@ -352,9 +352,9 @@ const Tournament = () => {
                     >
                         <HStack spacing='24px'>
                             <Button colorScheme='telegram' onClick={() => register()}>S'inscrire</Button>
-                            <NextLink href={'/tournament/' + params.tournamentId + '/ask/' + address}>
+                            {!isManagerValue && <NextLink href={'/tournament/' + params.tournamentId + '/ask/' + address}>
                                 <Button colorScheme='telegram'>Contacter le responsable du tournoi</Button>
-                            </NextLink>
+                            </NextLink> }
                         </HStack>
                     </Flex>
                 }
