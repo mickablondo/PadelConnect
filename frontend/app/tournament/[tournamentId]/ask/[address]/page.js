@@ -1,5 +1,6 @@
 "use client"
 import { useParams, useRouter } from 'next/navigation';
+import { v4 as uuidv4 } from 'uuid';
 import { useEffect, useState } from 'react';
 import NotConnected from '@/components/NotConnected/NotConnected';
 import { getManager } from '@/components/Utils/Tournament';
@@ -14,8 +15,11 @@ const Ask = () => {
     const params = useParams();
     const [comments, setComments] = useState([]);
     const [addingComment, setAddingComment] = useState('');
+    const [managerAddress, setManagerAddress] = useState();
     const toast = useToast();
     const router = useRouter();
+    const contractAddress = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS;
+    const MAX_MESSAGES = 10; // 10 derniers messages affichés seulement
 
     const writeMessage = async () => {
 
@@ -26,15 +30,32 @@ const Ask = () => {
             if(isConnected) {
                 // vérif de l'utilisateur connecté : seulement player et le manager
                 const managerAddressFromBc = await getManager(params.tournamentId, address);
-                console.log('address', address); 
-                console.log('params.address', params.address);
-                console.log('managerAddressFromBc', managerAddressFromBc);
-                if(params.address !== address || managerAddressFromBc !== address) {
+                setManagerAddress(managerAddressFromBc);
+                if(params.address !== address && managerAddressFromBc !== address) {
                     router.replace('/');
                 }
 
                 // recherche des messages à afficher
+                const data = await readContract({
+                    address: contractAddress,
+                    abi: Contract.abi,
+                    functionName: "getMessagesManagerPlayer",
+                    args: [params.tournamentId, params.address],
+                    account: address
+                });
+                
+                let start_messages = 0;
+                if(data.length > MAX_MESSAGES) {
+                    start_messages = (parseInt(data.length)-MAX_MESSAGES+1);
+                }
 
+                setComments([]);
+
+                for (let i = start_messages; i <= parseInt(data.length)-1; i++) {
+                    setComments(oldComments => [...oldComments, {
+                        message: data[i].message, author: data[i].author
+                    }]);
+                }
             }
         }
         getMessages();
