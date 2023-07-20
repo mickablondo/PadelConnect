@@ -386,12 +386,19 @@ describe("Test PadelConnect", function() {
             await pcContract.connect(manager).addTournament('caen', 2067697299, 1, 2);
         });
 
-        it('should add a new player', async function() {
+        it('should decrease the number of registrations allowed when adding a new player', async function() {
             let tournament = await pcContract.tournaments(0);
             const registrationsAvailable = tournament.registrationsAvailable;
             await pcContract.connect(player1).registerPlayer(0);
             tournament = await pcContract.tournaments(0);
             expect(tournament.registrationsAvailable).to.be.lt(registrationsAvailable);
+        });
+
+        it('should add a new tournament for the player registered', async function() {
+            const nbTournamentsBefore = await pcContract.connect(player1).getTournamentsByPlayer();
+            await pcContract.connect(player1).registerPlayer(0);
+            const nbTournamentsAfter = await pcContract.connect(player1).getTournamentsByPlayer();
+            expect(nbTournamentsAfter.length).to.be.gt(nbTournamentsBefore.length);
         });
 
         it('should revert if the id does not exist', async function() {

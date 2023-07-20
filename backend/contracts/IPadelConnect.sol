@@ -104,6 +104,13 @@ interface IPadelConnect {
     function registerPlayer(uint _id) external;
 
     /**
+     * @dev Get the tournaments which the player is registered.
+     * 
+     * @return array of the tournaments id
+     */
+    function getTournamentsByPlayer() external view returns(uint[] memory);
+
+    /**
      * @dev Add the two winners of the tournament and call the mint function to send them a NFT reward.
      *
      * Requirements:

@@ -15,6 +15,7 @@ import Link  from 'next/link';
 const Profil = () => {
     const { isConnected, address } = useAccount();
     const [listFollowed, setListFollowed] = useState([]);
+    const [listRegistered, setListRegistered] = useState([]);
     const contractAddress = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS;
     const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
 
@@ -49,7 +50,22 @@ const Profil = () => {
                 });
             }
         }
+
+        async function getRegisterTournaments() {
+            if(isConnected) {
+                setListRegistered([]);
+                const registerData = await readContract({
+                    address: contractAddress,
+                    abi: Contract.abi,
+                    functionName: "tournamentsByPlayer",
+                    args: [address],
+                    account: address
+                });
+            }
+        }
+
         getFollowedTournaments();
+        getRegisterTournaments();
     }, [address]);
 
     return (
@@ -82,6 +98,9 @@ const Profil = () => {
                         ) : (
                             <Text fontSize='4xl' as='i'>Aucun tournoi suivi.</Text>
                         )}
+                        </Flex>
+                        <Flex>
+                            <Text fontSize='6xl'>Mes inscriptions :</Text>
                         </Flex>
                     </HStack>
                 </AbsoluteCenter>

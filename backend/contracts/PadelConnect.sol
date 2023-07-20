@@ -31,6 +31,9 @@ contract PadelConnect is IPadelConnect, Ownable {
     /// @notice Map of a tournament id to the players registered
     mapping(uint => mapping(address => bool)) public playersRegistered;
 
+    /// @notice Map of an address player to his registered tournaments
+    mapping(address => uint[]) tournamentsByPlayer;
+
     /// @notice Map of a tournament id to the addresses of his followers
     mapping(uint => mapping(address => bool)) public followedTournaments;
 
@@ -172,9 +175,17 @@ contract PadelConnect is IPadelConnect, Ownable {
         }
 
         playersRegistered[_id][msg.sender] = true;
+        tournamentsByPlayer[msg.sender].push(_id);
 
         --tournament.registrationsAvailable;
         tournaments[_id].registrationsAvailable = tournament.registrationsAvailable;
+    }
+
+    /**
+     * @dev See {IPadelConnect-getTournamentsByPlayer}.
+     */
+    function getTournamentsByPlayer() external view returns(uint[] memory) {
+        return tournamentsByPlayer[msg.sender];
     }
 
     /**
