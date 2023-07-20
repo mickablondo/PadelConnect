@@ -58,7 +58,7 @@ const MessageBoard = () => {
                     <Tr>
                         <Th>Tournoi</Th>
                         <Th>
-                            Joueurs souhaitant communiquer
+                            Joueurs souhaitant discuter
                         </Th>
                     </Tr>
                   </Thead>
@@ -70,7 +70,7 @@ const MessageBoard = () => {
                             <Text>{exchange.city}</Text>
                         </Td>
                         <Td>
-                            <Link href={"/tournament/" + exchange.id + "/ask"}>
+                            <Link href={"/tournament/" + exchange.id + "/ask/" + exchange.player}>
                                 <Text as='kbd'>{exchange.player}</Text>
                             </Link>
                         </Td>
