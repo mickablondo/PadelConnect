@@ -9,11 +9,9 @@ PadelConnect est une application décentralisée de gestion de tournois de Padel
 
 - Maquettes réalisées sur [Balsamiq.cloud](https://balsamiq.cloud/somhp53/p5sdeh6)
 - Url de la dApp déployée : https://padel-connect.vercel.app/
-- Adresse du contrat sur Sepolia : [0x387A4911227F12e832428dfb2425aDa2EAbFaA6F](https://sepolia.etherscan.io/address/0x387A4911227F12e832428dfb2425aDa2EAbFaA6F)
-- [ ] Adresse du contrat sur Goerli : 
+- Adresse du contrat sur Sepolia : [0x5b3e6a0027439Ab1F439A41B22DF2AB26Bc82719](https://sepolia.etherscan.io/address/0x5b3e6a0027439Ab1F439A41B22DF2AB26Bc82719)
 - Tableau de bord des issues : https://github.com/mickablondo/PadelConnect/issues?q=is%3Aissue
 - [ ] Lien vidéo démo
-- [ ] Lien ipfs pour le NFT
 
 ### Stack technique
 
@@ -37,32 +35,57 @@ flowchart >
     A -->|If manager| C[ /tournament/add]
     A -->|Any user| D[ /tournament/id]
     A -->|If manager| H[ /messageboard]
-    D -->|Any user| E[ /inscription]
-    D -->|Any user| G[ /ask]
-    B -.->|add manager| I((Smart Contract - Forum))
+    A -->|Any user| F[ /profile]
+    D -->|Any user| G[ /ask/address]
+    B -.->|add manager| I((Smart Contract))
     C -.->|add tournament| I
     D -.->|get info tournament| I
-    E -.->|register in tournament| I
+    D -.->|register in tournament| I
     D -.->|add winners| I
     D -.->|add comment| I
     G -.->|add comment to manager| I
-    H -.->|respond to player| I
-    I -.->|mint for the winners| J((Smart Contract - NFT))
-    I -.->|events tournaments/comments| A
+    G -.->|add response to player| I
+    H -.->|find messages| I
+    I -.->|event tournaments| A
+    I -.->|event managers| B
+    I -.->|event followed tournaments| F
 ```
 ![image](https://github.com/mickablondo/PadelConnect/assets/36310658/2214d57d-b78b-4f01-93a0-ccec16eb74e1)
 
 ## Instructions d'installation
 
-- [ ] Liste des commandes pour lancer le projet : Backend
-- [ ] Section NFT
-- [ ] Liste des commandes pour lancer le projet : Frontend
-- [X] Commande pour lancer les TU + rapport à ajouter
-- [ ] Scripts de migration
-- [ ] Scripts personnels : ajout d'un manager et d'un tournoi / ajout de messages ...
-
 ### Backend
+Se baser sur le fichier <i>.env.example</i> pour configurer la partie backend.  
+  
+Pour ajouter les dépendances :  
+```sh
+npm install
+```
+
+Pour déployer le smart contract en local :  
+```sh
+npx hardhat node  
+npx hardhat run scripts/deploy.js --network localhost
+```  
+  
+Pour déployer sur un testnet comme Sepolia :  
+```sh
+npx hardhat run scripts/deploy.js --network sepolia
+```
+
 ### Frontend
+Se baser sur le fichier <i>.env.example</i> pour configurer la partie frontend.  
+  
+Pour ajouter les dépendances :  
+```sh
+npm install
+```  
+  
+Pour démarrer la partie frontend en local :  
+```sh
+npx next dev
+```  
+
 ### Jeux de données 
 3 scripts ont été créés dans scripts/datas permettant l'insertion de jeux de données :  
  - add_datas.js : ajoute un manager, plusieurs tournois et un commentaire ;

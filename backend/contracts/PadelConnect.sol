@@ -4,10 +4,6 @@ pragma solidity 0.8.20;
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "./IPadelConnect.sol";
 
-// TODO revoir visibilité
-// TODO revérifier utilité de toutes les variables
-// TODO mapping(uint => Tournament) : mieux que array, non ?
-
 /// @title Padel tournament management contract
 /// @notice This contract makes it possible to manage padel tournaments and to connect the different users.
 /// @dev The owner adds tournament managers.
