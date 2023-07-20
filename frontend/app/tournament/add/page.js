@@ -102,9 +102,9 @@ const AddTournament = () => {
             <FormLabel>Nombre de joueurs</FormLabel>
             <Input onChange={e => setPlayersNumber(e.target.value)} placeholder='10' />
             <FormLabel>Niveau</FormLabel>
-            <Select placeholder='Sélectionner le niveau' onChange={(e) => setDifficulty(e.target.value)}>
+            <Select value={difficulty} placeholder='Sélectionner le niveau' onChange={(e) => setDifficulty(e.target.value)}>
               {EnumDifficulty.map(diff => (
-                <option key={uuidv4()}>{diff}</option>
+                <option key={uuidv4()} value={diff}>{diff}</option>
               ))}
             </Select>
             <FormLabel>Date</FormLabel>
