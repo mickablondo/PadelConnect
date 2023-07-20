@@ -36,6 +36,7 @@ const Header = () => {
         alignItems="center"
         p="2rem"
     >
+      <Flex width="20%">
         <Menu>
           <MenuButton
             as={IconButton}
@@ -77,31 +78,34 @@ const Header = () => {
             }
           </MenuList>
         </Menu>
-        <Link href="/">
-        <Flex>
-            <Image
-              boxSize='60px'
-              objectFit='cover'
-              src='/padel.png'
-            />
-            <Center>
-              <Heading lineHeight='tall'>
-                <Highlight
-                  query='- Padel Connect -'
-                  styles={{ px: '2', py: '1', rounded: 'full', bg: 'green.100' }}
-                >
-                  - Padel Connect -
-                </Highlight>
-              </Heading>
-            </Center>
-            <Image
-              boxSize='60px'
-              objectFit='cover'
-              src='/padel.png'
-            />
         </Flex>
+        <Link href="/">
+          <Flex>
+              <Image
+                boxSize='60px'
+                objectFit='cover'
+                src='/padel.png'
+              />
+              <Center>
+                <Heading lineHeight='tall'>
+                  <Highlight
+                    query='- Padel Connect -'
+                    styles={{ px: '2', py: '1', rounded: 'full', bg: 'green.100' }}
+                  >
+                    - Padel Connect -
+                  </Highlight>
+                </Heading>
+              </Center>
+              <Image
+                boxSize='60px'
+                objectFit='cover'
+                src='/padel.png'
+              />
+          </Flex>
         </Link>
-        <ConnectButton />
+        <Flex width="20%">
+          <ConnectButton />
+        </Flex>
     </Flex>
   )
 }
