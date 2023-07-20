@@ -9,11 +9,6 @@ module.exports = {
       url: "http://127.0.0.1:8545",
       chainId: 31337
     },
-    goerli: {
-      url: process.env.NEXT_GOERLI_RPC_URL,
-      accounts: [`0x${process.env.NEXT_PK}`],
-      chainId: 5
-    },
     sepolia: {
       url: process.env.NEXT_SEPOLIA_RPC_URL,
       accounts: [`0x${process.env.NEXT_PK}`],
