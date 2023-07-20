@@ -22,11 +22,72 @@ const Ask = () => {
     const MAX_MESSAGES = 10; // 10 derniers messages affichés seulement
 
     const writeMessage = async () => {
+        try {
+            let functionToCall = "addMessageToManager";
+            let paramsToBC = [params.tournamentId];
+            if(managerAddress === address) {
+                functionToCall = "addResponseToPlayer";
+                paramsToBC.push(params.address);
+            }
+            paramsToBC.push(addingComment);
 
+            const { request } = await prepareWriteContract({
+                address: contractAddress,
+                abi: Contract.abi,
+                functionName: functionToCall,
+                args: paramsToBC
+            });
+            await writeContract(request);
+
+            getMessages();
+            setAddingComment('');
+
+            toast({
+                title: 'Message ajouté.',
+                description: "Le message a bien été ajouté.",
+                status: 'success',
+                duration: 4000,
+                isClosable: true,
+            })
+        } catch(err) {
+            let description = 'Une erreur est survenue.';
+            if(err.details.includes('Wait')) description = "Merci d'attendre avant de poster un message à nouveau.";
+            toast({
+                title: 'Error.',
+                description: description,
+                status: 'error',
+                duration: 4000,
+                isClosable: true,
+            })
+        }
+    }
+
+    const getMessages = async () => {
+        // recherche des messages à afficher
+        const data = await readContract({
+            address: contractAddress,
+            abi: Contract.abi,
+            functionName: "getMessagesManagerPlayer",
+            args: [params.tournamentId, params.address],
+            account: address
+        });
+
+        let start_messages = 0;
+        if(data.length > MAX_MESSAGES) {
+            start_messages = (parseInt(data.length)-MAX_MESSAGES+1);
+        }
+
+        setComments([]);
+
+        for (let i = start_messages; i <= parseInt(data.length)-1; i++) {
+            setComments(oldComments => [...oldComments, {
+                message: data[i].message, author: data[i].author
+            }]);
+        }
     }
 
     useEffect(() => {
-        async function getMessages() {
+        async function getInfos() {
             if(isConnected) {
                 // vérif de l'utilisateur connecté : seulement player et le manager
                 const managerAddressFromBc = await getManager(params.tournamentId, address);
@@ -35,30 +96,10 @@ const Ask = () => {
                     router.replace('/');
                 }
 
-                // recherche des messages à afficher
-                const data = await readContract({
-                    address: contractAddress,
-                    abi: Contract.abi,
-                    functionName: "getMessagesManagerPlayer",
-                    args: [params.tournamentId, params.address],
-                    account: address
-                });
-                
-                let start_messages = 0;
-                if(data.length > MAX_MESSAGES) {
-                    start_messages = (parseInt(data.length)-MAX_MESSAGES+1);
-                }
-
-                setComments([]);
-
-                for (let i = start_messages; i <= parseInt(data.length)-1; i++) {
-                    setComments(oldComments => [...oldComments, {
-                        message: data[i].message, author: data[i].author
-                    }]);
-                }
+                getMessages();
             }
         }
-        getMessages();
+        getInfos();
       }, [address]);
 
     return (
