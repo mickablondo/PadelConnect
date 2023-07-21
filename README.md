@@ -24,7 +24,8 @@ Solidity / Hardhat / React / Nextjs / Wagmi / Viem / Rainbow Kit / Chakra-ui / E
 | Player | Toute personne n'étant pas <i>manager</i> ni <i>owner</i> est un jouer. |  
 
 ### Fonctionnalités
-![image](https://github.com/mickablondo/PadelConnect/assets/36310658/1964eb71-1d91-4818-a37c-eef5154365f4)  
+![image](https://github.com/mickablondo/PadelConnect/assets/36310658/3e500752-b2b0-4be4-8041-ef285110edab)
+
 
 ## Schéma des interactions
 Le schéma ci-dessous montrent les interactions entre le frontend et les smart contracts :  
