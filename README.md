@@ -205,9 +205,9 @@ En version web via le fichier <i>./coverage/contracts/index.html</i> :
 
 ```js
 it('should revert when tournament is already started', async function() {
-    await time.increaseTo(2087697299);
+    await time.increaseTo(2087697299); // 27/02/2036
     await expectRevert(
-        pcContract.connect(player1).registerPlayer(0, 'roger', 'federer'),
+        pcContract.connect(player1).registerPlayer(0),
         "RegistrationEnded"
     );
 });
