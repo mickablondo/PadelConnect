@@ -93,7 +93,7 @@ npx next dev
  - add_datas.js : ajoute un manager, plusieurs tournois et un commentaire ;
  - add_messages_to_manager.js : crée 3 messages entre un joueur et un manager (pré-requis : add_datas.js);
  - add_newtournament.js : ajoute un nouveau tournoi (pré-requis : add_datas.js);
- - register_player.js : enregistre 2 joueurs sur un tournoi et crée 2 commentaires sur ce même tournoi (pré-requis : add_datas.js / <b>Attention</b>, vous n'avez que 30s pour exécuter ce script après le pré-requis !);
+ - register_player.js : enregistre 2 joueurs sur un tournoi et crée 2 commentaires sur ce même tournoi (pré-requis : add_datas.js / <b>Attention, vous n'avez que 30s pour exécuter ce script après le pré-requis !</b>);
   
 Pour les exécuter :  
 ```bash
