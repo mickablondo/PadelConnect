@@ -11,7 +11,7 @@ PadelConnect est une application décentralisée de gestion de tournois de Padel
 - Url de la dApp déployée : https://padel-connect.vercel.app/
 - Adresse du contrat sur Sepolia : [0x5b3e6a0027439Ab1F439A41B22DF2AB26Bc82719](https://sepolia.etherscan.io/address/0x5b3e6a0027439Ab1F439A41B22DF2AB26Bc82719)
 - Tableau de bord des issues : https://github.com/mickablondo/PadelConnect/issues?q=is%3Aissue
-- [ ] Lien vidéo démo
+- Vidéo de la démo : https://www.loom.com/share/dcfe31b075fc4e6199a22d67366e3aac?t=280&sid=374a89aa-38a9-4378-a7e5-9610f21f630a
 
 ### Stack technique
 Solidity / Hardhat / React / Nextjs / Wagmi / Viem / Rainbow Kit / Chakra-ui / Ethers.js / chai.js
