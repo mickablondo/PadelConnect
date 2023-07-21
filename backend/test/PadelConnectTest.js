@@ -84,6 +84,14 @@ describe("Test PadelConnect", function() {
             );  
         });
 
+        it('should revert when caller to get the tournaments is not a manager', async function() {
+            pcContract.connect(manager).addTournament('rouen', 2067697299, 3, 16)
+            await expectRevert(
+                pcContract.connect(player1).getTournaments(),
+                "Forbidden"
+            );  
+        });
+
         it('should revert when the city is empty', async function() {
             await expectRevert(
                 pcContract.connect(manager).addTournament('', 2067697299, 3, 16),

@@ -151,7 +151,7 @@ contract PadelConnect is IPadelConnect, Ownable {
     /**
      * @dev See {IPadelConnect-getTournaments}.
      */
-    function getTournaments() external view returns(uint[] memory) {
+    function getTournaments() external view onlyManagers returns(uint[] memory) {
         return linkTournamentsByManager[msg.sender];
     }
 

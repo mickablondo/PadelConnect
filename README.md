@@ -128,6 +128,7 @@ Résultat :
       ✔ should add a new tournament
       ✔ should emit an event when adding a new tournament
       ✔ should revert when caller is not a manager
+      ✔ should revert when caller to get the tournaments is not a manager
       ✔ should revert when the city is empty
       ✔ should revert when the date is in the past
       ✔ should revert when the number of players is odd
@@ -159,7 +160,7 @@ Résultat :
         ✔ should revert if message is empty
       Messages from a player to a manager
         ✔ should add a new message to a manager
-        ✔ should not modify the exchanges array when adding two new messages to a manager (3024ms)
+        ✔ should not modify the exchanges array when adding two new messages to a manager (3028ms)
         ✔ should revert if id does not exist
         ✔ should revert when player send many messages in a short time
         ✔ should revert if message is empty
@@ -181,7 +182,7 @@ Résultat :
       ✔ should revert when tournament is already started
 
 
-  52 passing (5s)
+  53 passing (5s)
 
 --------------------|----------|----------|----------|----------|----------------|
 File                |  % Stmts | % Branch |  % Funcs |  % Lines |Uncovered Lines |
