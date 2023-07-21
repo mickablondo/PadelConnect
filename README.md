@@ -42,6 +42,7 @@ flowchart >
     D -.->|register in tournament| I
     D -.->|add winners| I
     D -.->|add comment| I
+    D -.->|follow| I
     F -.->|get tournaments by player| I
     G -.->|add comment to manager| I
     G -.->|add response to player| I
