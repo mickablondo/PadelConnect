@@ -28,7 +28,7 @@ Solidity / Hardhat / React / Nextjs / Wagmi / Viem / Rainbow Kit / Chakra-ui / E
 
 
 ## Schéma des interactions
-Le schéma ci-dessous montrent les interactions entre le frontend et les smart contracts :  
+Le schéma ci-dessous montrent les interactions entre le frontend et le smart contract :  
 ```mermaid
 flowchart >
     A[ /home] -->|If owner| B[ /admin]
