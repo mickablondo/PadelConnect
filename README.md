@@ -21,7 +21,7 @@ Solidity / Hardhat / React / Nextjs / Wagmi / Viem / Rainbow Kit / Chakra-ui / E
 |----|----|
 | Owner | Le propriétaire est l'administrateur de l'application. |
 | Manager | Un <i>manager</i> est celui qui gère ses tournois. |
-| Player | Toute personne n'étant pas <i>manager</i> ni <i>owner</i> est un jouer. |  
+| Player | Toute personne n'étant pas <i>manager</i> ni <i>owner</i> est un joueur. |  
 
 ### Fonctionnalités
 ![image](https://github.com/mickablondo/PadelConnect/assets/36310658/cfd8e276-4be6-43ac-a7f7-1ce88692cfc1)
