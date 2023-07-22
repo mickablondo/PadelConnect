@@ -9,14 +9,14 @@ import {
 } from '@rainbow-me/rainbowkit';
 import { configureChains, createConfig, WagmiConfig } from 'wagmi';
 import {
-  hardhat, sepolia
+  hardhat, sepolia, goerli
 } from 'wagmi/chains';
 import { publicProvider } from 'wagmi/providers/public';
 import { infuraProvider } from 'wagmi/providers/infura';
 import Layout from '@/components/Layout/Layout';
 
 const { chains, publicClient } = configureChains(
-  [hardhat, sepolia],
+  [hardhat, sepolia, goerli],
   [
     infuraProvider({ apiKey: process.env.NEXT_PUBLIC_INFURA_ID }),
     publicProvider()
