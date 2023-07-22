@@ -8,8 +8,9 @@ PadelConnect est une application décentralisée de gestion de tournois de Padel
 ### Liens
 
 - Maquettes réalisées sur [Balsamiq.cloud](https://balsamiq.cloud/somhp53/p5sdeh6)
-- Url de la dApp déployée : https://padel-connect.vercel.app/
-- Adresse du contrat sur Sepolia : [0x5b3e6a0027439Ab1F439A41B22DF2AB26Bc82719](https://sepolia.etherscan.io/address/0x5b3e6a0027439Ab1F439A41B22DF2AB26Bc82719)
+- Url de la dApp déployée (connecté au contrat déployé sur Goerli) : https://padel-connect.vercel.app/
+- Adresse du contrat sur Goerli : [0x4aCB6c67D15E3251299614832E6bA94B98a0Dd80](https://goerli.etherscan.io/address/0x4aCB6c67D15E3251299614832E6bA94B98a0Dd80)
+- Le contrat a également été déployé sur Sepolia : [0x5b3e6a0027439Ab1F439A41B22DF2AB26Bc82719](https://sepolia.etherscan.io/address/0x5b3e6a0027439Ab1F439A41B22DF2AB26Bc82719)
 - Tableau de bord des issues : https://github.com/mickablondo/PadelConnect/issues?q=is%3Aissue
 - Vidéo de la démo : https://www.loom.com/share/dcfe31b075fc4e6199a22d67366e3aac?t=280&sid=374a89aa-38a9-4378-a7e5-9610f21f630a
 
@@ -73,6 +74,11 @@ npx hardhat run scripts/deploy.js --network localhost
 Pour déployer sur un testnet comme Sepolia :  
 ```sh
 npx hardhat run scripts/deploy.js --network sepolia
+```
+  
+Pour déployer sur un testnet comme Goerli :  
+```sh
+npx hardhat run scripts/deploy.js --network goerli
 ```
 
 ### Frontend
@@ -197,7 +203,7 @@ All files           |      100 |      100 |      100 |      100 |               
 
 En version web via le fichier <i>./coverage/contracts/index.html</i> :  
   
-![image](https://github.com/mickablondo/PadelConnect/assets/36310658/f1a80012-d3c7-416e-b4b3-e31bd3582646)
+![image](https://github.com/mickablondo/PadelConnect/assets/36310658/5e6ecd0b-828e-4323-877d-ca8acf726039)
 
   
 > **Note**  

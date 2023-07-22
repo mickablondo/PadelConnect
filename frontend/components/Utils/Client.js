@@ -12,16 +12,8 @@ export const Client = () => {
     }
 
     // goerli
-    if(process.env.NEXT_PUBLIC_ENV == 'goerli') {
-        return createPublicClient({
-            chain: goerli,
-            transport: http(),
-        });
-    }
-
-    // sepolia
     return createPublicClient({
-        chain: sepolia,
+        chain: goerli,
         transport: http(),
     });
 }

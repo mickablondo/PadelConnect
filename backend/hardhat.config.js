@@ -18,8 +18,6 @@ module.exports = {
       url: process.env.NEXT_GOERLI_RPC_URL,
       accounts: [`0x${process.env.NEXT_PK}`],
       chainId: 5
-      // provider : function() {return new HDWalletProvider({mnemonic:{phrase:`${process.env.NEXT_MNEMONIC}`},providerOrUrl:`${process.env.NEXT_GOERLI_RPC_URL}`})},
-      // network_id:5,
     }
   },
   solidity: {
