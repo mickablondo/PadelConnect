@@ -231,3 +231,21 @@ it('should revert when tournament is already started', async function() {
 - Ne pas signer à chaque message ajouté dans les chats ;
 - Front-end à revoir ;
 - Voir les [issues restantes](https://github.com/mickablondo/PadelConnect/issues) (améliorations / évolutions) ;
+
+## Quelques écrans au 17/08/2023
+
+![image](https://github.com/mickablondo/PadelConnect/assets/36310658/08d333b4-fa7f-49dd-8e63-1af2cf24934c)  
+![image](https://github.com/mickablondo/PadelConnect/assets/36310658/83a0d287-d0dc-453b-8044-00ed41b63aa0)  
+![image](https://github.com/mickablondo/PadelConnect/assets/36310658/e5e53408-ff8a-401b-a9e0-a47c04542f22)  
+![image](https://github.com/mickablondo/PadelConnect/assets/36310658/86d1c7f3-053e-416a-8745-de39903fae41)  
+![image](https://github.com/mickablondo/PadelConnect/assets/36310658/9c5d4f70-ae6c-4948-90b9-30dca87cc379)  
+![image](https://github.com/mickablondo/PadelConnect/assets/36310658/30abdaab-1ecd-4088-bf03-e9b025081e25)  
+![image](https://github.com/mickablondo/PadelConnect/assets/36310658/18cf0051-befe-498b-93e0-101049765b18)  
+![image](https://github.com/mickablondo/PadelConnect/assets/36310658/496dd31a-fa91-4509-9993-379c4d69b600)
+
+
+
+
+
+
+
