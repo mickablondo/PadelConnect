@@ -230,3 +230,4 @@ it('should revert when tournament is already started', async function() {
 ## Améliorations
 - Ne pas signer à chaque message ajouté dans les chats ;
 - Front-end à revoir ;
+- Voir les [issues restantes](https://github.com/mickablondo/PadelConnect/issues) (améliorations / évolutions) ;
