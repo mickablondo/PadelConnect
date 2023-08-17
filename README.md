@@ -226,3 +226,7 @@ it('should revert when tournament is already started', async function() {
 ```sh
 ✔ should not modify the exchanges array when adding two new messages to a manager (3025ms)
 ```
+
+## Améliorations
+- Ne pas signer à chaque message ajouté dans les chats ;
+- Front-end à revoir ;
