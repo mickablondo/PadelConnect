@@ -2,6 +2,7 @@
 pragma solidity 0.8.20;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "./IPadelConnect.sol";
 
 /// @title Padel tournament management contract
@@ -10,7 +11,7 @@ import "./IPadelConnect.sol";
 ///      The tournament managers create tournaments.
 ///      The players register for tournaments. 
 /// @author Mickaël Blondeau
-contract PadelConnect is IPadelConnect, Ownable {
+contract PadelConnect is IPadelConnect, Ownable, ReentrancyGuard {
 
     /// @notice Map of a manager address to his registration
     mapping(address => bool) public managers;
@@ -158,7 +159,7 @@ contract PadelConnect is IPadelConnect, Ownable {
     /**
      * @dev See {IPadelConnect-registerPlayer}.
      */
-    function registerPlayer(uint _id) external shouldIdTournamentExists(_id) {
+    function registerPlayer(uint _id) external shouldIdTournamentExists(_id) nonReentrant {
         require(!playersRegistered[_id][msg.sender], "Already registered");
         Tournament memory tournament = tournaments[_id];
 
@@ -198,7 +199,7 @@ contract PadelConnect is IPadelConnect, Ownable {
     /**
      * @dev See {IPadelConnect-addComment}.
      */
-    function addComment(uint _id, string calldata _message) external shouldIdTournamentExists(_id) notEmptyString(_message) waitUntilNewPost(msg.sender) {
+    function addComment(uint _id, string calldata _message) external shouldIdTournamentExists(_id) notEmptyString(_message) waitUntilNewPost(msg.sender) nonReentrant {
         comments[_id][idComments[_id]] = Comment(_message, msg.sender);
         ++idComments[_id];
         lastPostDate[msg.sender] = block.timestamp;
@@ -218,7 +219,7 @@ contract PadelConnect is IPadelConnect, Ownable {
     /**
      * @dev See {IPadelConnect-addCommentToManager}.
      */
-    function addMessageToManager(uint _id, string calldata _message) external shouldIdTournamentExists(_id) notEmptyString(_message) waitUntilNewPost(msg.sender) {
+    function addMessageToManager(uint _id, string calldata _message) external shouldIdTournamentExists(_id) notEmptyString(_message) waitUntilNewPost(msg.sender) nonReentrant {
         messages[_id][msg.sender].push(Comment(_message, msg.sender));
         lastPostDate[msg.sender] = block.timestamp;
         // pour éviter les doublons
@@ -237,7 +238,7 @@ contract PadelConnect is IPadelConnect, Ownable {
     /**
      * @dev See {IPadelConnect-addResponseToPlayer}.
      */
-    function addResponseToPlayer(uint _id, address _player, string calldata _message) external shouldIdTournamentExists(_id) onlyTheManagerCreator(_id, msg.sender) notZeroAddress(_player) notEmptyString(_message) waitUntilNewPost(msg.sender) {
+    function addResponseToPlayer(uint _id, address _player, string calldata _message) external shouldIdTournamentExists(_id) onlyTheManagerCreator(_id, msg.sender) notZeroAddress(_player) notEmptyString(_message) waitUntilNewPost(msg.sender) nonReentrant {
         messages[_id][_player].push(Comment(_message, msg.sender));
         lastPostDate[msg.sender] = block.timestamp;
     }
